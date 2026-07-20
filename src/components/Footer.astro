@@ -1,0 +1,133 @@
+---
+import { site, nav } from "@/data/site";
+import { services } from "@/data/services";
+import Logo from "./Logo.astro";
+import Icon from "./Icon.astro";
+
+const year = new Date().getFullYear();
+---
+
+<footer class="mt-24 border-t border-border bg-surface">
+  <div class="container-page py-16">
+    <div class="grid gap-12 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr]">
+      <!-- Brand -->
+      <div class="flex flex-col gap-4">
+        <Logo />
+        <p class="max-w-xs text-sm leading-relaxed text-fg-muted">
+          {site.shortDescription}
+        </p>
+        <div class="flex items-center gap-2 pt-1">
+          <a
+            href={site.social.linkedin}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="LinkedIn"
+            class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border text-fg-muted transition-colors hover:border-accent hover:text-accent"
+          >
+            <Icon name="linkedin" size={17} />
+          </a>
+          <a
+            href={site.social.github}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="GitHub"
+            class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border text-fg-muted transition-colors hover:border-accent hover:text-accent"
+          >
+            <Icon name="github" size={17} />
+          </a>
+          <a
+            href={site.social.x}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="X"
+            class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border text-fg-muted transition-colors hover:border-accent hover:text-accent"
+          >
+            <Icon name="x" size={16} />
+          </a>
+        </div>
+      </div>
+
+      <!-- Nav -->
+      <div>
+        <h3 class="text-sm font-semibold text-fg">Company</h3>
+        <ul class="mt-4 flex flex-col gap-2.5">
+          {
+            nav.map((item) => (
+              <li>
+                <a
+                  href={item.href}
+                  class="text-sm text-fg-muted transition-colors hover:text-accent"
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <!-- Services -->
+      <div>
+        <h3 class="text-sm font-semibold text-fg">Services</h3>
+        <ul class="mt-4 flex flex-col gap-2.5">
+          {
+            services.map((s) => (
+              <li>
+                <a
+                  href={`/services/#${s.slug}`}
+                  class="text-sm text-fg-muted transition-colors hover:text-accent"
+                >
+                  {s.title}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <!-- Contact -->
+      <div>
+        <h3 class="text-sm font-semibold text-fg">Get in touch</h3>
+        <ul class="mt-4 flex flex-col gap-3">
+          <li>
+            <a
+              href={`mailto:${site.contact.email}`}
+              class="flex items-start gap-2.5 text-sm text-fg-muted transition-colors hover:text-accent"
+            >
+              <Icon name="mail" size={17} class="mt-0.5 shrink-0 text-accent" />
+              {site.contact.email}
+            </a>
+          </li>
+          <li>
+            <a
+              href={`tel:${site.contact.phone.replace(/\s/g, "")}`}
+              class="flex items-start gap-2.5 text-sm text-fg-muted transition-colors hover:text-accent"
+            >
+              <Icon name="phone" size={17} class="mt-0.5 shrink-0 text-accent" />
+              {site.contact.phone}
+            </a>
+          </li>
+          <li class="flex items-start gap-2.5 text-sm text-fg-muted">
+            <Icon name="pin" size={17} class="mt-0.5 shrink-0 text-accent" />
+            <span>
+              {site.address.street}<br />
+              {site.address.city}, {site.address.region}
+              {site.address.postalCode}, {site.address.country}
+            </span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div
+      class="mt-14 flex flex-col items-center justify-between gap-4 border-t border-border pt-8 sm:flex-row"
+    >
+      <p class="text-sm text-fg-subtle">
+        © {year} {site.legalName}. Built to reach higher.
+      </p>
+      <p class="text-sm text-fg-subtle">
+        {site.address.city}, {site.address.region} · {site.address.country}
+      </p>
+    </div>
+  </div>
+</footer>

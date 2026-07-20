@@ -1,0 +1,144 @@
+---
+import { nav } from "@/data/site";
+import Logo from "./Logo.astro";
+import ThemeToggle from "./ThemeToggle.astro";
+import Button from "./Button.astro";
+import Icon from "./Icon.astro";
+
+const path = Astro.url.pathname;
+const isActive = (href: string) =>
+  href === "/" ? path === "/" : path.startsWith(href);
+---
+
+<header
+  id="site-header"
+  class="sticky top-0 z-50 border-b border-transparent transition-all duration-300"
+>
+  <div class="container-page">
+    <div class="flex h-16 items-center justify-between gap-4 md:h-18">
+      <Logo />
+
+      <!-- Desktop nav -->
+      <nav class="hidden items-center gap-1 lg:flex" aria-label="Primary">
+        {
+          nav.map((item) => (
+            <a
+              href={item.href}
+              aria-current={isActive(item.href) ? "page" : undefined}
+              class:list={[
+                "rounded-full px-3.5 py-2 text-sm font-medium transition-colors",
+                isActive(item.href)
+                  ? "text-accent"
+                  : "text-fg-muted hover:text-fg",
+              ]}
+            >
+              {item.label}
+            </a>
+          ))
+        }
+      </nav>
+
+      <div class="flex items-center gap-2">
+        <ThemeToggle />
+        <div class="hidden sm:block">
+          <Button href="/contact/" size="md" arrow>Start a project</Button>
+        </div>
+        <!-- Mobile menu button -->
+        <button
+          id="menu-open"
+          type="button"
+          class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border text-fg lg:hidden"
+          aria-label="Open menu"
+          aria-expanded="false"
+          aria-controls="mobile-menu"
+        >
+          <Icon name="menu" size={20} />
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile menu -->
+  <div
+    id="mobile-menu"
+    class="fixed inset-0 z-50 hidden bg-bg/95 backdrop-blur-sm lg:hidden"
+  >
+    <div class="container-page">
+      <div class="flex h-16 items-center justify-between">
+        <Logo />
+        <button
+          id="menu-close"
+          type="button"
+          class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border text-fg"
+          aria-label="Close menu"
+        >
+          <Icon name="close" size={20} />
+        </button>
+      </div>
+      <nav class="mt-6 flex flex-col gap-1" aria-label="Mobile">
+        {
+          nav.map((item) => (
+            <a
+              href={item.href}
+              class:list={[
+                "rounded-xl px-4 py-3.5 text-lg font-medium transition-colors",
+                isActive(item.href)
+                  ? "bg-surface text-accent"
+                  : "text-fg hover:bg-surface",
+              ]}
+            >
+              {item.label}
+            </a>
+          ))
+        }
+        <div class="mt-4">
+          <Button href="/contact/" size="lg" arrow class="w-full">
+            Start a project
+          </Button>
+        </div>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<script>
+  // Header shadow/background on scroll.
+  const header = document.getElementById("site-header");
+  const onScroll = () => {
+    if (window.scrollY > 8) {
+      header?.classList.add(
+        "bg-bg/85",
+        "backdrop-blur-md",
+        "border-border",
+        "shadow-sm"
+      );
+    } else {
+      header?.classList.remove(
+        "bg-bg/85",
+        "backdrop-blur-md",
+        "border-border",
+        "shadow-sm"
+      );
+    }
+  };
+  onScroll();
+  window.addEventListener("scroll", onScroll, { passive: true });
+
+  // Mobile menu open/close.
+  const menu = document.getElementById("mobile-menu");
+  const openBtn = document.getElementById("menu-open");
+  const closeBtn = document.getElementById("menu-close");
+  const setOpen = (open: boolean) => {
+    menu?.classList.toggle("hidden", !open);
+    openBtn?.setAttribute("aria-expanded", String(open));
+    document.body.style.overflow = open ? "hidden" : "";
+  };
+  openBtn?.addEventListener("click", () => setOpen(true));
+  closeBtn?.addEventListener("click", () => setOpen(false));
+  menu?.querySelectorAll("a").forEach((a) =>
+    a.addEventListener("click", () => setOpen(false))
+  );
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") setOpen(false);
+  });
+</script>

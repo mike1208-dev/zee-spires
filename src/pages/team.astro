@@ -1,0 +1,90 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import SectionHeader from "@/components/SectionHeader.astro";
+import CtaBand from "@/components/CtaBand.astro";
+import Icon from "@/components/Icon.astro";
+import { engineers } from "@/data/engineers";
+---
+
+<Layout
+  title="Team"
+  description="Meet the senior engineers behind ZeeSpires — backgrounds at companies like Microsoft and IBM, with deep expertise across AI, data, and full-stack engineering."
+>
+  <!-- Header -->
+  <section class="relative overflow-hidden border-b border-border">
+    <div class="bg-grid pointer-events-none absolute inset-0"></div>
+    <div class="container-page relative py-16 md:py-24">
+      <SectionHeader
+        eyebrow="Our engineers"
+        title='The people are the <span class="accent-italic text-accent">difference</span>'
+        description="A tech services company is only as strong as its engineers. Ours have built and run systems at leading companies — and they're the ones you'll work with directly."
+      />
+    </div>
+  </section>
+
+  <!-- Engineer grid -->
+  <section class="container-page py-16 md:py-24">
+    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        engineers.map((eng, i) => (
+          <article
+            class="reveal group flex flex-col gap-5 rounded-2xl border border-border bg-surface p-7 transition-all duration-300 hover:-translate-y-1 hover:border-accent/40 hover:shadow-[var(--shadow-card)]"
+            data-delay={(i % 3) * 80}
+          >
+            <div class="flex items-center gap-4">
+              <div
+                class="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl border border-border bg-surface-2 font-mono text-lg font-semibold text-accent"
+                style="font-family: var(--font-mono)"
+                aria-hidden="true"
+              >
+                {eng.initials}
+              </div>
+              <div class="flex flex-col">
+                <h2 class="text-lg font-bold leading-tight">{eng.name}</h2>
+                <p class="text-sm font-medium text-accent">{eng.role}</p>
+              </div>
+            </div>
+
+            <p class="text-[0.95rem] leading-relaxed text-fg-muted">
+              {eng.bio}
+            </p>
+
+            <div class="flex flex-wrap gap-2">
+              {eng.background.map((company) => (
+                <span class="inline-flex items-center gap-1.5 rounded-full bg-accent-soft px-3 py-1 text-xs font-semibold text-accent">
+                  <Icon name="spark" size={13} />
+                  ex-{company}
+                </span>
+              ))}
+            </div>
+
+            <div class="mt-auto flex flex-col gap-3 border-t border-border pt-5">
+              <div class="flex flex-wrap gap-1.5">
+                {eng.specialties.map((sp) => (
+                  <span class="rounded-md bg-surface-2 px-2.5 py-1 text-xs font-medium text-fg-muted">
+                    {sp}
+                  </span>
+                ))}
+              </div>
+              <p class="flex items-center gap-1.5 text-xs text-fg-subtle">
+                <Icon name="pin" size={13} />
+                {eng.location}
+              </p>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+
+    <!-- Consent / placeholder note -->
+    <p class="mt-10 max-w-2xl text-sm text-fg-subtle">
+      Profiles shown are representative. Real engineer names, photos, and
+      résumés are published only with each person's consent.
+    </p>
+  </section>
+
+  <CtaBand
+    title='Work with engineers who have <span class="accent-italic">been there.</span>'
+    description="Want senior people on your project — as an embedded team or advisors? Let's talk."
+  />
+</Layout>

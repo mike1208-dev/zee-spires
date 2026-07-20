@@ -1,0 +1,40 @@
+---
+/**
+ * ZeeSpires wordmark — a "spire / skyline" mark: rising bars capped by a
+ * pointed central spire with a beacon. Echoes the brand's skyline motif,
+ * refined and fully SVG. Swap for an official logo asset when available.
+ */
+interface Props {
+  class?: string;
+}
+const { class: className = "" } = Astro.props;
+---
+
+<a
+  href="/"
+  class={`group inline-flex items-center gap-2.5 font-semibold text-fg ${className}`}
+  aria-label="ZeeSpires — home"
+  style="font-family: var(--font-display)"
+>
+  <svg
+    width="30"
+    height="30"
+    viewBox="0 0 32 32"
+    fill="none"
+    aria-hidden="true"
+    class="text-accent transition-transform duration-300 group-hover:-translate-y-0.5"
+  >
+    <!-- skyline bars -->
+    <rect x="3" y="18" width="3.4" height="10" rx="1" fill="currentColor" fill-opacity="0.45" />
+    <rect x="8.5" y="13" width="3.4" height="15" rx="1" fill="currentColor" fill-opacity="0.7" />
+    <!-- central spire -->
+    <path d="M16 3 L19.4 12 L16 10.4 L12.6 12 Z" fill="currentColor" />
+    <rect x="14.3" y="11" width="3.4" height="17" rx="1" fill="currentColor" />
+    <circle cx="16" cy="4" r="1.4" fill="currentColor" />
+    <rect x="20.1" y="13" width="3.4" height="15" rx="1" fill="currentColor" fill-opacity="0.7" />
+    <rect x="25.6" y="18" width="3.4" height="10" rx="1" fill="currentColor" fill-opacity="0.45" />
+  </svg>
+  <span class="text-lg tracking-tight">
+    Zee<span class="text-accent">Spires</span>
+  </span>
+</a>

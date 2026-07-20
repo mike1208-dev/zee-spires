@@ -1,0 +1,292 @@
+@import "tailwindcss";
+
+/*
+  ZeeSpires design system — v2
+  --------------------------------------------------------------------------
+  Brand DNA (from zeespires.com): deep navy + gold/amber, monospace eyebrow
+  labels, a grotesk display headline, and a "spire / skyline" motif — elevated
+  with more whitespace, a serif-italic accent, and refined depth.
+
+  Dark is the primary, brand-true theme. Light is a clean, elegant companion.
+  Semantic tokens are CSS custom properties so we can flip themes at runtime;
+  `@theme inline` maps them into Tailwind utilities.
+*/
+
+:root {
+  /* Light theme (elegant companion) */
+  --bg: #ffffff;
+  --bg-tint: #f8f9fc;
+  --surface: #f6f8fb;
+  --surface-2: #eef1f7;
+  --border: #e4e8f0;
+  --border-strong: #cfd6e2;
+
+  --fg: #0a1220;
+  --fg-muted: #4d5a72;
+  --fg-subtle: #8792a5;
+
+  /* Antique gold reads on white; the fill button uses the same. */
+  --accent: #a97913;
+  --accent-hover: #916510;
+  --accent-fg: #ffffff;
+  --accent-soft: #fbf1d8;
+  --accent-line: color-mix(in srgb, var(--accent) 45%, transparent);
+
+  --ring: color-mix(in srgb, var(--accent) 45%, transparent);
+  --grid-line: color-mix(in srgb, var(--fg) 5%, transparent);
+  --shadow-color: 222 45% 20%;
+  --shadow-sm: 0 1px 2px hsl(var(--shadow-color) / 0.06);
+  --shadow-md: 0 10px 30px -12px hsl(var(--shadow-color) / 0.15);
+  --shadow-lg: 0 30px 70px -24px hsl(var(--shadow-color) / 0.25);
+}
+
+:root[data-theme="dark"] {
+  /* Dark theme (primary / brand-true) */
+  --bg: #080e1c;
+  --bg-tint: #0a1224;
+  --surface: #0f1a30;
+  --surface-2: #16243f;
+  --border: #1d2c48;
+  --border-strong: #2b3f63;
+
+  --fg: #eef3fb;
+  --fg-muted: #9fb2cf;
+  --fg-subtle: #607089;
+
+  /* Bright brand gold shines on navy. */
+  --accent: #f4b740;
+  --accent-hover: #ffca63;
+  --accent-fg: #0a1220;
+  --accent-soft: color-mix(in srgb, #f4b740 13%, transparent);
+  --accent-line: color-mix(in srgb, var(--accent) 55%, transparent);
+
+  --ring: color-mix(in srgb, var(--accent) 60%, transparent);
+  --grid-line: color-mix(in srgb, #ffffff 4%, transparent);
+  --shadow-color: 222 70% 2%;
+  --shadow-sm: 0 1px 2px hsl(var(--shadow-color) / 0.4);
+  --shadow-md: 0 12px 32px -12px hsl(var(--shadow-color) / 0.6);
+  --shadow-lg: 0 32px 70px -22px hsl(var(--shadow-color) / 0.8);
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-tint: var(--bg-tint);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-fg-subtle: var(--fg-subtle);
+
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-fg: var(--accent-fg);
+  --color-accent-soft: var(--accent-soft);
+
+  --font-sans: "Inter Variable", system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  --font-display: "Space Grotesk Variable", "Inter Variable", system-ui,
+    sans-serif;
+  --font-serif: "Newsreader Variable", Georgia, "Times New Roman", serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, "SFMono-Regular",
+    Menlo, Consolas, monospace;
+
+  --shadow-card: var(--shadow-md);
+  --shadow-float: var(--shadow-lg);
+
+  --radius-lg: 0.875rem;
+  --radius-xl: 1.25rem;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+    color-scheme: light;
+  }
+  html[data-theme="dark"] {
+    color-scheme: dark;
+  }
+
+  body {
+    background-color: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-sans);
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    color: var(--fg);
+    letter-spacing: -0.02em;
+    font-weight: 600;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--accent) 28%, transparent);
+    color: var(--fg);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+}
+
+@layer components {
+  /* Serif-italic accent word (e.g. "higher.") — editorial contrast, in gold. */
+  .accent-italic {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    color: var(--accent);
+  }
+
+  .container-page {
+    width: 100%;
+    max-width: 78rem;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+  @media (min-width: 640px) {
+    .container-page {
+      padding-inline: 2rem;
+    }
+  }
+
+  /* Monospace eyebrow / kicker — the signature ZeeSpires label style. */
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .eyebrow::before {
+    content: "";
+    width: 1.6rem;
+    height: 1px;
+    background: currentColor;
+    opacity: 0.8;
+  }
+
+  /* Small monospace meta text. */
+  .mono-meta {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.02em;
+    color: var(--fg-subtle);
+  }
+
+  /* Subtle grid background for hero + feature sections. */
+  .bg-grid {
+    background-image:
+      linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+    background-size: 54px 54px;
+    -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
+  }
+
+  /* Warm gold glow accent for the hero. */
+  .glow-gold {
+    background: radial-gradient(
+      circle at center,
+      color-mix(in srgb, var(--accent) 22%, transparent) 0%,
+      transparent 70%
+    );
+  }
+
+  /* Gold underline treatment for the accent word (cleaner than a marker box). */
+  .underline-gold {
+    position: relative;
+  }
+  .underline-gold::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0.08em;
+    height: 0.14em;
+    background: color-mix(in srgb, var(--accent) 40%, transparent);
+    border-radius: 2px;
+  }
+}
+
+/* Tech marquee */
+.marquee-mask {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 8%,
+    #000 92%,
+    transparent
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 8%,
+    #000 92%,
+    transparent
+  );
+}
+.marquee {
+  animation: marquee 34s linear infinite;
+}
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee {
+    animation: none;
+  }
+}
+
+/* Reveal-on-scroll. */
+@media (prefers-reduced-motion: no-preference) {
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+}

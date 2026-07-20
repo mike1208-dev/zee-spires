@@ -1,0 +1,57 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import SectionHeader from "@/components/SectionHeader.astro";
+import CtaBand from "@/components/CtaBand.astro";
+import { processSteps } from "@/data/content";
+---
+
+<Layout
+  title="Process"
+  description="How ZeeSpires works: a clear engagement flow from consult and design through build, delivery, and ongoing support."
+>
+  <!-- Header -->
+  <section class="relative overflow-hidden border-b border-border">
+    <div class="bg-grid pointer-events-none absolute inset-0"></div>
+    <div class="container-page relative py-16 md:py-24">
+      <SectionHeader
+        eyebrow="How we work"
+        title='A process built for <span class="accent-italic text-accent">trust</span>'
+        description="No black boxes. You see the shape of the solution early, get working software often, and always know who's accountable."
+      />
+    </div>
+  </section>
+
+  <!-- Timeline -->
+  <section class="container-page py-16 md:py-24">
+    <ol class="relative mx-auto flex max-w-3xl flex-col gap-3">
+      {
+        processSteps.map((step, i) => (
+          <li
+            class="reveal group relative flex gap-6 rounded-2xl border border-transparent p-5 transition-colors hover:border-border hover:bg-surface sm:gap-8 sm:p-7"
+            data-delay={i * 70}
+          >
+            <div class="flex flex-col items-center">
+              <span class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-border bg-surface text-lg font-bold text-accent transition-colors group-hover:bg-accent group-hover:text-accent-fg">
+                {step.number}
+              </span>
+              {i < processSteps.length - 1 && (
+                <span class="mt-2 w-px flex-1 bg-border" aria-hidden="true" />
+              )}
+            </div>
+            <div class="flex flex-col gap-2 pb-6">
+              <h2 class="text-xl font-bold sm:text-2xl">{step.title}</h2>
+              <p class="text-[1.02rem] leading-relaxed text-fg-muted">
+                {step.description}
+              </p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <CtaBand
+    title={`Ready when you are. <span class="accent-italic">Let's start.</span>`}
+    description="The first step is a conversation. Tell us what you're working on and we'll map out how to get there."
+  />
+</Layout>

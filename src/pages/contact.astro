@@ -1,0 +1,186 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import SectionHeader from "@/components/SectionHeader.astro";
+import Button from "@/components/Button.astro";
+import Icon from "@/components/Icon.astro";
+import { site } from "@/data/site";
+import { services } from "@/data/services";
+
+const inputCls =
+  "w-full rounded-xl border border-border bg-bg px-4 py-3 text-fg placeholder:text-fg-subtle transition-colors focus:border-accent focus:outline-none";
+const labelCls = "text-sm font-semibold text-fg";
+---
+
+<Layout
+  title="Contact"
+  description="Start a project with ZeeSpires. Send us a note, email us directly, or book a call — you'll talk straight to senior engineers."
+>
+  <section class="relative overflow-hidden border-b border-border">
+    <div class="bg-grid pointer-events-none absolute inset-0"></div>
+    <div class="container-page relative py-16 md:py-20">
+      <SectionHeader
+        eyebrow="Contact"
+        title={`Let's start a <span class="accent-italic text-accent">conversation</span>`}
+        description="Tell us what you're trying to build. We'll get back within one business day — and you'll talk directly to the people who'd do the work."
+      />
+    </div>
+  </section>
+
+  <section class="container-page py-16 md:py-20">
+    <div class="grid gap-12 lg:grid-cols-[1.5fr_1fr] lg:gap-16">
+      <!-- Form -->
+      <div>
+        <form id="contact-form" class="flex flex-col gap-5" novalidate>
+          <div class="grid gap-5 sm:grid-cols-2">
+            <div class="flex flex-col gap-2">
+              <label class={labelCls} for="name">Name <span class="text-accent">*</span></label>
+              <input class={inputCls} type="text" id="name" name="name" required autocomplete="name" placeholder="Jane Doe" />
+            </div>
+            <div class="flex flex-col gap-2">
+              <label class={labelCls} for="email">Email <span class="text-accent">*</span></label>
+              <input class={inputCls} type="email" id="email" name="email" required autocomplete="email" placeholder="jane@company.com" />
+            </div>
+          </div>
+
+          <div class="grid gap-5 sm:grid-cols-2">
+            <div class="flex flex-col gap-2">
+              <label class={labelCls} for="company">Company</label>
+              <input class={inputCls} type="text" id="company" name="company" autocomplete="organization" placeholder="Acme Inc." />
+            </div>
+            <div class="flex flex-col gap-2">
+              <label class={labelCls} for="service">What can we help with?</label>
+              <select class={inputCls} id="service" name="service">
+                <option value="">Select a service…</option>
+                {services.map((s) => <option value={s.title}>{s.title}</option>)}
+                <option value="Other">Something else</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-2">
+            <label class={labelCls} for="message">Message <span class="text-accent">*</span></label>
+            <textarea class={`${inputCls} min-h-36 resize-y`} id="message" name="message" required placeholder="A few lines about your project, timeline, and goals…"></textarea>
+          </div>
+
+          <!-- Honeypot field for basic spam protection (hidden from users). -->
+          <div class="absolute left-[-9999px]" aria-hidden="true">
+            <label for="company_website">Leave this field empty</label>
+            <input type="text" id="company_website" name="company_website" tabindex="-1" autocomplete="off" />
+          </div>
+
+          <div class="flex flex-col gap-4 pt-2 sm:flex-row sm:items-center">
+            <Button type="submit" size="lg" arrow class="sm:w-auto">
+              <span data-submit-label>Send message</span>
+            </Button>
+            <p class="text-sm text-fg-subtle">
+              Prefer email? <a class="font-medium text-accent hover:underline" href={`mailto:${site.contact.email}`}>{site.contact.email}</a>
+            </p>
+          </div>
+
+          <!-- Status region (announced to screen readers). -->
+          <p
+            id="form-status"
+            role="status"
+            aria-live="polite"
+            class="hidden rounded-xl px-4 py-3 text-sm font-medium"
+          ></p>
+        </form>
+      </div>
+
+      <!-- Sidebar -->
+      <aside class="flex flex-col gap-6">
+        <div class="rounded-2xl border border-border bg-surface p-7">
+          <h2 class="text-lg font-bold">Reach us directly</h2>
+          <ul class="mt-5 flex flex-col gap-4">
+            <li>
+              <a href={`mailto:${site.contact.email}`} class="flex items-start gap-3 text-sm text-fg-muted transition-colors hover:text-accent">
+                <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent"><Icon name="mail" size={18} /></span>
+                <span><span class="block font-semibold text-fg">Email</span>{site.contact.email}</span>
+              </a>
+            </li>
+            <li>
+              <a href={`tel:${site.contact.phone.replace(/\s/g, "")}`} class="flex items-start gap-3 text-sm text-fg-muted transition-colors hover:text-accent">
+                <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent"><Icon name="phone" size={18} /></span>
+                <span><span class="block font-semibold text-fg">Phone</span>{site.contact.phone}</span>
+              </a>
+            </li>
+            <li class="flex items-start gap-3 text-sm text-fg-muted">
+              <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent"><Icon name="pin" size={18} /></span>
+              <span><span class="block font-semibold text-fg">Office</span>{site.address.street}, {site.address.city}, {site.address.region} {site.address.postalCode}, {site.address.country}</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="rounded-2xl border border-border bg-surface p-7">
+          <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-accent-soft text-accent"><Icon name="calendar" size={22} /></div>
+          <h2 class="mt-4 text-lg font-bold">Rather book a call?</h2>
+          <p class="mt-2 text-sm leading-relaxed text-fg-muted">Grab a 30-minute slot with a senior engineer. No sales script — just a real conversation about your project.</p>
+          <div class="mt-5">
+            <Button href={site.contact.bookingUrl} variant="secondary" external arrow>Book a call</Button>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  const form = document.getElementById("contact-form") as HTMLFormElement | null;
+  const status = document.getElementById("form-status");
+  const submitBtn = form?.querySelector<HTMLButtonElement>('button[type="submit"]');
+  const label = form?.querySelector<HTMLElement>("[data-submit-label]");
+
+  const show = (msg: string, ok: boolean) => {
+    if (!status) return;
+    status.textContent = msg;
+    status.classList.remove("hidden");
+    status.style.background = ok
+      ? "color-mix(in srgb, var(--accent) 12%, transparent)"
+      : "color-mix(in srgb, #ef4444 12%, transparent)";
+    status.style.color = ok ? "var(--accent)" : "#dc2626";
+  };
+
+  form?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+
+    const data = Object.fromEntries(new FormData(form).entries());
+    if (submitBtn) submitBtn.disabled = true;
+    if (label) label.textContent = "Sending…";
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      const body = await res.json().catch(() => ({}));
+      if (res.ok) {
+        form.reset();
+        show(
+          "Thanks — your message is on its way. We'll be in touch within one business day.",
+          true
+        );
+        if (label) label.textContent = "Message sent";
+      } else {
+        show(
+          (body && body.error) ||
+            "Something went wrong. Please email us at admin@zeespires.com.",
+          false
+        );
+        if (submitBtn) submitBtn.disabled = false;
+        if (label) label.textContent = "Send message";
+      }
+    } catch {
+      show(
+        "Network error. Please email us directly at admin@zeespires.com.",
+        false
+      );
+      if (submitBtn) submitBtn.disabled = false;
+      if (label) label.textContent = "Send message";
+    }
+  });
+</script>

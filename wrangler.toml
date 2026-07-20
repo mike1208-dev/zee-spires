@@ -1,0 +1,7 @@
+# Wrangler config for local dev and (optional) CLI deploys of the Pages project.
+# The Cloudflare Pages Git integration doesn't require this file, but it lets
+# you run `wrangler pages dev` and `wrangler pages deploy` locally.
+
+name = "zeespires"
+compatibility_date = "2025-07-01"
+pages_build_output_dir = "dist"
