@@ -11,7 +11,7 @@ export const site = {
     "ZeeSpires is a senior-led software team delivering AI agents, data platforms, full-stack products, and IT consulting for ambitious B2B companies.",
   url: "https://zeespires.com",
   locale: "en_US",
-  themeColor: "#080e1c",
+  themeColor: "#07070b",
 
   contact: {
     email: "admin@zeespires.com",
@@ -36,12 +36,21 @@ export const site = {
   },
 } as const;
 
-export const nav = [
-  { label: "Services", href: "/services/" },
-  { label: "Team", href: "/team/" },
-  { label: "Process", href: "/process/" },
-  { label: "Why Us", href: "/why-us/" },
-  { label: "Contact", href: "/contact/" },
-] as const;
+export type NavChild = { label: string; href: string };
+export type NavItem = { label: string; href: string; children?: NavChild[] };
 
-export type NavItem = (typeof nav)[number];
+export const nav: NavItem[] = [
+  {
+    label: "Services",
+    href: "/services/",
+    children: [
+      { label: "Overview", href: "/services/" },
+      { label: "AI Agent Development", href: "/services/ai-agent-development/" },
+      { label: "Data Engineering", href: "/services/data-engineering/" },
+      { label: "Full-Stack Development", href: "/services/full-stack-development/" },
+      { label: "IT Consulting & Staffing", href: "/services/it-consulting-staffing/" },
+    ],
+  },
+  { label: "Engineers", href: "/engineers/" },
+  { label: "Contact", href: "/contact/" },
+];

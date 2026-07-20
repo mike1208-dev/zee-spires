@@ -1,49 +1,36 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" font-family="'Space Grotesk', Inter, system-ui, sans-serif">
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#0a1224"/>
-      <stop offset="1" stop-color="#080e1c"/>
-    </linearGradient>
-    <pattern id="grid" width="54" height="54" patternUnits="userSpaceOnUse">
-      <path d="M54 0 H0 V54" fill="none" stroke="#ffffff" stroke-opacity="0.04" stroke-width="1"/>
-    </pattern>
-    <linearGradient id="spire" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#f4b740" stop-opacity="0.9"/>
-      <stop offset="1" stop-color="#f4b740" stop-opacity="0.15"/>
+    <radialGradient id="bg" cx="30%" cy="10%" r="90%">
+      <stop offset="0" stop-color="#12101f"/>
+      <stop offset="100" stop-color="#07070b"/>
+    </radialGradient>
+    <radialGradient id="orb" cx="38%" cy="32%" r="75%">
+      <stop offset="0%" stop-color="#efe9ff"/>
+      <stop offset="30%" stop-color="#b79dff"/>
+      <stop offset="62%" stop-color="#7c53f0"/>
+      <stop offset="100%" stop-color="#241247"/>
+    </radialGradient>
+    <linearGradient id="grad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#a78bfa"/>
+      <stop offset="100" stop-color="#ede9fe"/>
     </linearGradient>
   </defs>
   <rect width="1200" height="630" fill="url(#bg)"/>
-  <rect width="1200" height="630" fill="url(#grid)"/>
 
-  <!-- Logo mark -->
-  <g transform="translate(96, 88)" fill="#f4b740">
-    <rect x="0" y="24" width="7" height="20" rx="2" fill-opacity="0.5"/>
-    <rect x="12" y="12" width="7" height="32" rx="2" fill-opacity="0.75"/>
-    <path d="M34 0 L41 18 L34 15 L27 18 Z"/>
-    <rect x="30.5" y="16" width="7" height="28" rx="2"/>
-    <rect x="46" y="12" width="7" height="32" rx="2" fill-opacity="0.75"/>
-    <rect x="58" y="24" width="7" height="20" rx="2" fill-opacity="0.5"/>
-    <text x="86" y="40" font-size="40" font-weight="600" fill="#eef3fb">ZeeSpires</text>
-  </g>
+  <!-- glow + orb -->
+  <circle cx="950" cy="300" r="230" fill="#8b5cf6" opacity="0.18"/>
+  <circle cx="950" cy="300" r="140" fill="url(#orb)"/>
+  <circle cx="950" cy="300" r="140" fill="none" stroke="#a78bfa" stroke-opacity="0.4"/>
 
-  <!-- Eyebrow -->
-  <text x="96" y="240" font-size="22" font-weight="500" letter-spacing="6" fill="#f4b740" font-family="'JetBrains Mono', monospace">— SOFTWARE DEVELOPMENT STUDIO</text>
+  <!-- eyebrow -->
+  <text x="96" y="235" font-size="22" font-weight="600" letter-spacing="5" fill="#a78bfa">AI-NATIVE SOFTWARE STUDIO</text>
 
-  <!-- Headline -->
-  <text x="94" y="330" font-size="82" font-weight="600" fill="#eef3fb" letter-spacing="-2">Software built to reach</text>
-  <text x="94" y="424" font-size="82" font-weight="400" fill="#f4b740" font-style="italic" font-family="Georgia, 'Times New Roman', serif" letter-spacing="-1">higher.</text>
+  <!-- headline -->
+  <text x="94" y="330" font-size="84" font-weight="500" fill="#8a8a9c" letter-spacing="-2">Software built to</text>
+  <text x="94" y="426" font-size="84" font-weight="500" letter-spacing="-2">reach <tspan fill="url(#grad)">higher.</tspan></text>
 
-  <!-- Subline -->
-  <text x="96" y="502" font-size="28" fill="#9fb2cf">AI Agents · Data Engineering · Full-Stack · IT Consulting &amp; Staffing</text>
+  <!-- subline -->
+  <text x="96" y="500" font-size="27" fill="#9b9caf">AI Agents · Data Engineering · Full-Stack · IT Consulting &amp; Staffing</text>
 
-  <!-- Right-side spires -->
-  <g transform="translate(830, 150)">
-    <rect x="0" y="120" width="44" height="180" fill="url(#spire)" stroke="#f4b740" stroke-opacity="0.5"/>
-    <path d="M70 40 L110 -30 L150 40 Z" fill="url(#spire)" stroke="#f4b740" stroke-opacity="0.6"/>
-    <rect x="82" y="38" width="56" height="262" fill="url(#spire)" stroke="#f4b740" stroke-opacity="0.6"/>
-    <circle cx="110" cy="-30" r="7" fill="#f4b740"/>
-    <rect x="176" y="120" width="44" height="180" fill="url(#spire)" stroke="#f4b740" stroke-opacity="0.5"/>
-  </g>
-
-  <text x="96" y="566" font-size="22" font-weight="500" fill="#607089" font-family="'JetBrains Mono', monospace">ZeeSpires US LLC — Senior-led software team</text>
+  <text x="96" y="566" font-size="21" font-weight="600" fill="#6a6b80" letter-spacing="1">ZeeSpires US LLC</text>
 </svg>

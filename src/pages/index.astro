@@ -5,207 +5,173 @@ import SectionHeader from "@/components/SectionHeader.astro";
 import ServiceCard from "@/components/ServiceCard.astro";
 import CtaBand from "@/components/CtaBand.astro";
 import Icon from "@/components/Icon.astro";
-import HeroArt from "@/components/HeroArt.astro";
 import { services } from "@/data/services";
-import { differentiators, techStack, stats, industries } from "@/data/content";
+import { differentiators, stats, industries, clients, processSteps } from "@/data/content";
 import { site } from "@/data/site";
-
-const marquee = [
-  "TypeScript", "React", "Next.js", "Node.js", "Python", "Django",
-  "PostgreSQL", "AWS", "Cloudflare", "Docker", "Kubernetes", "Claude",
-];
 ---
 
 <Layout title={site.name}>
-  <!-- Hero -->
-  <section class="relative overflow-hidden border-b border-border">
-    <div class="bg-grid pointer-events-none absolute inset-0"></div>
-    <div class="container-page relative pt-16 pb-14 md:pt-24 md:pb-20">
-      <div
-        class="grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-8"
-      >
-        <!-- Copy -->
-        <div class="flex flex-col items-start">
-          <span class="eyebrow reveal mb-6">Software Development Studio</span>
+  <!-- Hero (full-screen video, pulled up behind the transparent header) -->
+  <section class="relative -mt-18 overflow-hidden">
+    <video
+      class="pointer-events-none absolute inset-0 h-full w-full object-cover"
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="metadata"
+      aria-hidden="true"
+    >
+      <source src="/videos/hero-home.mp4" type="video/mp4" />
+    </video>
+    <!-- Blend the video into the dark page: mute + ramp to black toward bottom -->
+    <div class="pointer-events-none absolute inset-0 bg-gradient-to-b from-bg/30 via-bg/45 to-bg"></div>
+    <div class="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-bg/80 to-transparent"></div>
 
-          <h1
-            class="reveal text-[2.7rem] font-semibold leading-[1.03] tracking-tight sm:text-6xl lg:text-[4.4rem]"
-            data-delay="60"
-          >
-            Software built<br />to reach
-            <span class="accent-italic">higher.</span>
-          </h1>
+    <div class="container-page relative flex min-h-[100svh] flex-col items-center justify-center pt-28 pb-20 text-center">
+      <div class="flex w-full max-w-4xl flex-col items-center">
+        <h1
+          class="reveal text-shadow-hero text-[2.9rem] font-medium leading-[1.02] tracking-tight sm:text-6xl lg:text-7xl"
+          data-delay="60"
+        >
+          <span class="text-dim">Software built to</span><br />
+          reach <span class="accent-italic">higher.</span>
+        </h1>
 
-          <p
-            class="reveal mt-6 max-w-xl text-lg leading-relaxed text-fg-muted"
-            data-delay="120"
-          >
-            ZeeSpires is a senior-led software team that turns ambitious ideas
-            into shipped products — from the first sketch on a whiteboard to a
-            system running at scale.
-          </p>
+        <p
+          class="reveal text-shadow-hero mt-7 max-w-xl text-lg leading-relaxed text-fg/90 md:text-xl"
+          data-delay="120"
+        >
+          A senior-led team building AI agents, data platforms, and full-stack
+          products — from the first whiteboard sketch to a system running at
+          scale.
+        </p>
 
-          <div
-            class="reveal mt-9 flex flex-col gap-3 sm:flex-row"
-            data-delay="180"
-          >
-            <Button href="/contact/" size="lg" arrow>Start a project</Button>
-            <Button href="/services/" variant="secondary" size="lg">
-              See what we build
-            </Button>
+        <div class="reveal mt-9" data-delay="180">
+          <Button href="/contact/" size="lg" arrow>Start a project</Button>
+        </div>
+
+        <!-- Client logo marquee, just under the CTA -->
+        <div class="reveal mt-14 w-full" data-delay="240">
+          <div class="marquee-mask flex overflow-hidden">
+            <div class="marquee flex shrink-0 items-center gap-14 pr-14">
+              {
+                [...clients, ...clients].map((c) => (
+                  <span
+                    class="text-shadow-hero whitespace-nowrap text-xl font-semibold text-fg-muted"
+                    style="font-family: var(--font-display)"
+                  >
+                    {c}
+                  </span>
+                ))
+              }
+            </div>
           </div>
-
-          <!-- Trust row (monospace, brand style) -->
-          <ul
-            class="reveal mt-12 flex flex-col gap-2.5"
-            data-delay="240"
-          >
-            {
-              [
-                "Engineers ex-Microsoft, ex-IBM & more",
-                "Direct access to the people building it",
-                "Fixed-scope or embedded — senior-led only",
-              ].map((t) => (
-                <li class="mono-meta flex items-center gap-2.5">
-                  <Icon name="check" size={15} class="text-accent" />
-                  {t}
-                </li>
-              ))
-            }
-          </ul>
-        </div>
-
-        <!-- Illustration -->
-        <div class="reveal order-first lg:order-last" data-delay="120">
-          <HeroArt class="mx-auto max-w-md lg:max-w-none" />
-        </div>
-      </div>
-    </div>
-
-    <!-- Tech marquee -->
-    <div class="relative border-t border-border py-4">
-      <div class="marquee-mask flex overflow-hidden">
-        <div class="marquee flex shrink-0 items-center gap-10 pr-10">
-          {
-            [...marquee, ...marquee].map((t) => (
-              <span class="mono-meta flex items-center gap-10 whitespace-nowrap">
-                {t}
-                <span class="text-accent/50">◆</span>
-              </span>
-            ))
-          }
         </div>
       </div>
     </div>
   </section>
 
+  <!-- Services -->
+  <section class="container-page py-24 md:py-32">
+    <SectionHeader
+      title={`Four disciplines, <span class="accent-italic">one team.</span>`}
+      description="From autonomous AI systems to the data and products they run on — plus the senior people to advise or embed with yours."
+    />
+    <div class="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      {services.map((s, i) => <ServiceCard service={s} index={i} />)}
+    </div>
+  </section>
+
   <!-- Stats -->
-  <section class="container-page pt-14 md:pt-20">
-    <div
-      class="reveal grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-border bg-border lg:grid-cols-4"
-    >
+  <section class="container-page pb-8">
+    <div class="hairline mb-16"></div>
+    <div class="grid grid-cols-2 gap-8 lg:grid-cols-4">
       {
-        stats.map((s) => (
-          <div class="flex min-h-36 flex-col items-center justify-center gap-1.5 bg-surface px-5 py-8 text-center">
+        stats.map((s, i) => (
+          <div class="reveal flex flex-col gap-2 text-center" data-delay={i * 70}>
             <span
-              class="text-4xl font-semibold text-accent sm:text-[2.75rem]"
+              class="text-4xl font-medium sm:text-5xl"
               style="font-family: var(--font-display)"
             >
-              {s.value}
+              <span class="accent-italic">{s.value}</span>
             </span>
-            <span class="text-sm leading-snug text-fg-muted">{s.label}</span>
+            <span class="text-sm text-fg-muted">{s.label}</span>
+          </div>
+        ))
+      }
+    </div>
+    <div class="hairline mt-16"></div>
+  </section>
+
+  <!-- Why us -->
+  <section class="container-page py-24 md:py-32">
+    <SectionHeader
+      title={`The differentiator is <span class="accent-italic">the people.</span>`}
+      description="We keep engagements senior-led and accountable, so you get judgment — not just hours."
+    />
+    <div class="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        differentiators.map((d, i) => (
+          <div
+            class="card reveal flex flex-col gap-4 p-7 transition-colors duration-300 hover:border-accent/25"
+            data-delay={(i % 3) * 70}
+          >
+            <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-accent-soft text-accent-hover">
+              <Icon name={d.icon} size={22} />
+            </div>
+            <h3 class="text-lg font-semibold">{d.title}</h3>
+            <p class="text-sm leading-relaxed text-fg-muted">{d.description}</p>
           </div>
         ))
       }
     </div>
   </section>
 
-  <!-- Services -->
-  <section class="container-page py-20 md:py-28">
-    <SectionHeader
-      eyebrow="What we do"
-      title="Four disciplines, one accountable team"
-      description="From autonomous AI systems to the data and products they run on — plus the senior people to advise or embed with your team."
-    />
-    <div class="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-      {services.map((s, i) => <ServiceCard service={s} index={i} />)}
-    </div>
-  </section>
-
-  <!-- Why us -->
-  <section class="border-y border-border bg-surface">
-    <div class="container-page py-20 md:py-28">
+  <!-- Process -->
+  <section class="border-t border-border bg-bg-2">
+    <div class="container-page py-24 md:py-32">
       <SectionHeader
-        eyebrow="Why ZeeSpires"
-        title="The differentiator is the people"
-        description="We keep engagements senior-led and accountable, so you get judgment — not just hours."
+        align="center"
+        class="mx-auto"
+        title={`A process built for <span class="accent-italic">trust.</span>`}
+        description="No black boxes. You see the shape of the solution early, get working software often, and always know who's accountable."
       />
-      <div class="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <ol class="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
         {
-          differentiators.map((d, i) => (
-            <div
-              class="reveal flex flex-col gap-3 rounded-2xl border border-border bg-bg p-7"
-              data-delay={i * 60}
+          processSteps.map((step, i) => (
+            <li
+              class="card reveal flex flex-col gap-3 p-6"
+              data-delay={(i % 5) * 60}
             >
-              <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-accent-soft text-accent">
-                <Icon name={d.icon} size={22} />
-              </div>
-              <h3 class="text-lg font-bold">{d.title}</h3>
+              <span
+                class="text-2xl font-medium text-accent-hover"
+                style="font-family: var(--font-display)"
+              >
+                {step.number}
+              </span>
+              <h3 class="text-base font-semibold">{step.title}</h3>
               <p class="text-sm leading-relaxed text-fg-muted">
-                {d.description}
+                {step.description}
               </p>
-            </div>
+            </li>
           ))
         }
-      </div>
-      <div class="reveal mt-10">
-        <Button href="/why-us/" variant="secondary" arrow>
-          More on how we work
-        </Button>
-      </div>
-    </div>
-  </section>
-
-  <!-- Tech stack -->
-  <section class="container-page py-20 md:py-28">
-    <div class="grid gap-12 lg:grid-cols-[1fr_1.5fr] lg:gap-16">
-      <SectionHeader
-        eyebrow="Tech stack"
-        title="Modern tools, chosen on merit"
-        description="We use proven, well-supported technology — and pick the right tool for the problem, not the trend."
-      />
-      <div class="reveal flex flex-col gap-6" data-delay="80">
-        {
-          techStack.map((group) => (
-            <div class="flex flex-col gap-3 border-b border-border pb-6 last:border-0 sm:flex-row sm:gap-8">
-              <h3 class="w-40 shrink-0 text-sm font-semibold text-fg-subtle">
-                {group.group}
-              </h3>
-              <ul class="flex flex-wrap gap-2">
-                {group.items.map((item) => (
-                  <li class="rounded-full border border-border bg-surface px-3.5 py-1.5 text-sm font-medium text-fg-muted">
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))
-        }
-      </div>
+      </ol>
     </div>
   </section>
 
   <!-- Industries -->
-  <section class="border-t border-border bg-surface">
+  <section class="border-y border-border bg-bg-2">
     <div class="container-page py-16">
       <div class="flex flex-col items-center gap-8 text-center">
-        <p class="text-sm font-semibold uppercase tracking-[0.14em] text-fg-subtle">
+        <p class="text-sm font-medium uppercase tracking-[0.18em] text-fg-subtle">
           Industries we work across
         </p>
         <div class="flex flex-wrap items-center justify-center gap-x-10 gap-y-4">
           {
             industries.map((ind) => (
-              <span class="text-lg font-semibold text-fg-muted">{ind}</span>
+              <span class="text-lg font-medium text-fg-muted">{ind}</span>
             ))
           }
         </div>

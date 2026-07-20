@@ -7,7 +7,6 @@ interface Props {
   class?: string;
 }
 const {
-  eyebrow,
   title,
   description,
   align = "left",
@@ -19,8 +18,7 @@ const alignCls =
 ---
 
 <div class={`flex flex-col gap-4 ${alignCls} ${align === "center" ? "max-w-2xl" : "max-w-3xl"} ${className}`}>
-  {eyebrow && <span class="eyebrow">{eyebrow}</span>}
-  <h2 class="text-3xl sm:text-4xl md:text-[2.6rem] font-bold leading-[1.1]">
+  <h2 class="text-3xl sm:text-4xl md:text-[2.7rem] font-medium leading-[1.08] tracking-tight">
     <Fragment set:html={title} />
   </h2>
   {

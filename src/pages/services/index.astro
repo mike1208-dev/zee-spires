@@ -1,0 +1,29 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import PageHero from "@/components/PageHero.astro";
+import ServiceCard from "@/components/ServiceCard.astro";
+import CtaBand from "@/components/CtaBand.astro";
+import { services } from "@/data/services";
+---
+
+<Layout
+  title="Services"
+  description="AI Agent Development, Data Engineering, Full-Stack Development, and IT Consulting & Staffing — delivered by senior engineers, end to end."
+  theme="light"
+>
+  <PageHero
+    eyebrow="Services"
+    title={`What we build, <span class="accent-italic">end to end.</span>`}
+    description="Four core disciplines. Each is senior-led and delivered with tests, documentation, and a team that stays accountable after launch."
+    video="/videos/svc-overview.mp4"
+    startCta
+  />
+
+  <section class="container-page py-20 md:py-28">
+    <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      {services.map((s, i) => <ServiceCard service={s} index={i} />)}
+    </div>
+  </section>
+
+  <CtaBand />
+</Layout>

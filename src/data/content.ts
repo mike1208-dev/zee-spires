@@ -127,3 +127,62 @@ export const industries: string[] = [
   "Logistics",
   "Professional Services",
 ];
+
+/** Outcome / expectation cards (Contact page). */
+export const outcomes: { icon: Differentiator["icon"]; text: string }[] = [
+  { icon: "spark", text: "Ship production AI systems, not demos" },
+  { icon: "signal", text: "Talk directly to the engineers building it" },
+  { icon: "shield", text: "U.S.-registered, senior-led, accountable" },
+  { icon: "layers", text: "Fixed-scope or embedded — your call" },
+  { icon: "compass", text: "Honest trade-offs, never buzzword hype" },
+  { icon: "users", text: "Tests, docs & support after launch" },
+];
+
+/** Client logos (placeholder wordmarks — replace with real clients). */
+export const clients: string[] = [
+  "Northwind",
+  "Acme Retail",
+  "Vertex Labs",
+  "Meridian",
+  "Lumen",
+  "Harbor",
+  "Cortex",
+  "Atlas",
+];
+
+/**
+ * Testimonials. ⚠️ PLACEHOLDER — fictional quotes for layout. Replace with real,
+ * attributed testimonials (with permission) before launch.
+ */
+export const testimonials: {
+  quote: string;
+  name: string;
+  role: string;
+  initials: string;
+  avatar: string;
+}[] = [
+  {
+    quote:
+      "They shipped a working AI agent in weeks, not quarters. We talked to the actual engineers the whole way — no account-manager telephone game.",
+    name: "Sarah Chen",
+    role: "VP Engineering, Fintech SaaS",
+    initials: "SC",
+    avatar: "/customers/00.webp",
+  },
+  {
+    quote:
+      "The data platform they built just works. Well-modeled, tested, and documented — our analysts finally trust the numbers.",
+    name: "Marcus Reid",
+    role: "Head of Data, Retail Group",
+    initials: "MR",
+    avatar: "/customers/01.webp",
+  },
+  {
+    quote:
+      "Senior people, honest trade-offs, and they stayed accountable after launch. Easily the most reliable partner we've worked with.",
+    name: "Aisha Khan",
+    role: "CTO, Logistics Platform",
+    initials: "AK",
+    avatar: "/customers/02.webp",
+  },
+];

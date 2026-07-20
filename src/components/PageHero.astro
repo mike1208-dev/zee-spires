@@ -1,0 +1,95 @@
+---
+/**
+ * Minimal dark page header used across inner pages. Centered eyebrow + large
+ * headline + optional description. Background is either a soft violet glow +
+ * dotted texture, or a looping muted video (when `video` is provided), always
+ * with a dark overlay so text stays legible.
+ * `title` accepts HTML (for gradient <span> emphasis).
+ */
+import Button from "./Button.astro";
+
+interface Props {
+  /** Deprecated — eyebrows removed site-wide; kept optional for compatibility. */
+  eyebrow?: string;
+  title: string;
+  description?: string;
+  /** Optional background video path (in /public), e.g. "/videos/svc-ai.mp4". */
+  video?: string;
+  /** Show a "Start a project" CTA button under the description. */
+  startCta?: boolean;
+}
+const { title, description, video, startCta = false } = Astro.props;
+---
+
+<section
+  class:list={[
+    "relative overflow-hidden",
+    video ? "-mt-18" : "border-b border-border",
+  ]}
+>
+  {
+    video ? (
+      <>
+        <video
+          class="pointer-events-none absolute inset-0 h-full w-full object-cover"
+          autoplay
+          muted
+          loop
+          playsinline
+          preload="metadata"
+          aria-hidden="true"
+        >
+          <source src={video} type="video/mp4" />
+        </video>
+        {/* Blend the video into the page: gentle tint, ramping to the solid
+            page background at the bottom so it melts into the content below. */}
+        <div class="pointer-events-none absolute inset-0 bg-gradient-to-b from-bg/20 via-bg/35 to-bg" />
+        <div class="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-bg/80 to-transparent" />
+      </>
+    ) : (
+      <>
+        <div class="bg-dots pointer-events-none absolute inset-0 opacity-70" />
+        <div class="glow pointer-events-none absolute left-1/2 top-[-30%] h-[60%] w-[80%] -translate-x-1/2 opacity-50" />
+      </>
+    )
+  }
+  <div
+    class:list={[
+      "container-page relative flex flex-col justify-center",
+      video ? "min-h-[100svh] pt-28 pb-20" : "py-24 md:py-32",
+    ]}
+  >
+    <div class="mx-auto flex max-w-3xl flex-col items-center text-center">
+      <h1
+        class:list={[
+          "reveal text-4xl font-medium leading-[1.05] tracking-tight sm:text-5xl md:text-6xl",
+          video && "text-shadow-hero",
+        ]}
+        data-delay="60"
+        set:html={title}
+      />
+      {
+        description && (
+          <p
+            class:list={[
+              "reveal mt-6 max-w-2xl text-lg leading-relaxed",
+              video ? "text-fg/90 text-shadow-hero" : "text-fg-muted",
+            ]}
+            data-delay="120"
+          >
+            {description}
+          </p>
+        )
+      }
+      {
+        startCta && (
+          <div class="reveal mt-9" data-delay="180">
+            <Button href="/contact/" size="lg" arrow>
+              Start a project
+            </Button>
+          </div>
+        )
+      }
+    </div>
+  </div>
+</section>

@@ -2,8 +2,6 @@
 import { site } from "@/data/site";
 import "@fontsource-variable/inter";
 import "@fontsource-variable/space-grotesk";
-import "@fontsource-variable/jetbrains-mono";
-import "@fontsource-variable/newsreader";
 import "@/styles/global.css";
 
 interface Props {
@@ -55,16 +53,3 @@ const fullTitle =
 <meta name="twitter:title" content={fullTitle} />
 <meta name="twitter:description" content={description} />
 <meta name="twitter:image" content={ogImage} />
-
-<!-- Set theme before paint to avoid a flash of the wrong theme. -->
-<script is:inline>
-  (function () {
-    try {
-      // Dark is the brand-true default; a stored toggle choice wins.
-      var stored = localStorage.getItem("theme");
-      document.documentElement.setAttribute("data-theme", stored || "dark");
-    } catch (e) {
-      document.documentElement.setAttribute("data-theme", "dark");
-    }
-  })();
-</script>

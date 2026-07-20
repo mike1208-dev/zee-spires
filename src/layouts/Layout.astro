@@ -3,18 +3,21 @@ import BaseHead from "@/components/BaseHead.astro";
 import JsonLd from "@/components/JsonLd.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
+import BackToTop from "@/components/BackToTop.astro";
 
 interface Props {
   title: string;
   description?: string;
   image?: string;
   noindex?: boolean;
+  /** Page color theme. Service pages use "light" so light videos flow into a white page. */
+  theme?: "dark" | "light";
 }
-const { title, description, image, noindex } = Astro.props;
+const { title, description, image, noindex, theme = "dark" } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme={theme === "light" ? "light" : undefined}>
   <head>
     <BaseHead
       title={title}
@@ -36,6 +39,7 @@ const { title, description, image, noindex } = Astro.props;
       <slot />
     </main>
     <Footer />
+    <BackToTop />
 
     <script>
       // Reveal-on-scroll for elements marked with .reveal.

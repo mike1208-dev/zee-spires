@@ -1,13 +1,14 @@
 ---
 import Layout from "@/layouts/Layout.astro";
-import SectionHeader from "@/components/SectionHeader.astro";
 import Button from "@/components/Button.astro";
 import Icon from "@/components/Icon.astro";
+import SectionHeader from "@/components/SectionHeader.astro";
 import { site } from "@/data/site";
 import { services } from "@/data/services";
+import { outcomes, clients, testimonials } from "@/data/content";
 
 const inputCls =
-  "w-full rounded-xl border border-border bg-bg px-4 py-3 text-fg placeholder:text-fg-subtle transition-colors focus:border-accent focus:outline-none";
+  "w-full rounded-xl border border-border-soft bg-surface/60 px-4 py-3 text-fg placeholder:text-fg-subtle transition-colors focus:border-accent focus:outline-none";
 const labelCls = "text-sm font-semibold text-fg";
 ---
 
@@ -15,21 +16,59 @@ const labelCls = "text-sm font-semibold text-fg";
   title="Contact"
   description="Start a project with ZeeSpires. Send us a note, email us directly, or book a call — you'll talk straight to senior engineers."
 >
-  <section class="relative overflow-hidden border-b border-border">
-    <div class="bg-grid pointer-events-none absolute inset-0"></div>
-    <div class="container-page relative py-16 md:py-20">
-      <SectionHeader
-        eyebrow="Contact"
-        title={`Let's start a <span class="accent-italic text-accent">conversation</span>`}
-        description="Tell us what you're trying to build. We'll get back within one business day — and you'll talk directly to the people who'd do the work."
-      />
-    </div>
-  </section>
+  <section class="container-page pt-16 pb-20 md:pt-24 md:pb-28">
+    <div class="grid gap-12 lg:grid-cols-[1fr_1.05fr] lg:gap-16">
+      <!-- Title + contents, with contact details below -->
+      <div class="flex flex-col">
+        <h1 class="text-4xl font-medium leading-[1.05] tracking-tight sm:text-5xl md:text-6xl">
+          Let's start a <span class="accent-italic">conversation.</span>
+        </h1>
+        <p class="mt-6 max-w-xl text-lg leading-relaxed text-fg-muted">
+          Tell us what you're trying to build. We'll get back within one
+          business day — and you'll talk directly to the people who'd do the
+          work.
+        </p>
 
-  <section class="container-page py-16 md:py-20">
-    <div class="grid gap-12 lg:grid-cols-[1.5fr_1fr] lg:gap-16">
+        <!-- Reach us directly -->
+        <div class="mt-10">
+          <h2 class="text-sm font-semibold uppercase tracking-[0.16em] text-accent-hover">
+            Reach us directly
+          </h2>
+          <ul class="mt-5 flex flex-col gap-4">
+            <li>
+              <a href={`mailto:${site.contact.email}`} class="flex items-start gap-3 text-sm text-fg-muted transition-colors hover:text-accent-hover">
+                <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent-hover"><Icon name="mail" size={18} /></span>
+                <span><span class="block font-semibold text-fg">Email</span>{site.contact.email}</span>
+              </a>
+            </li>
+            <li>
+              <a href={`tel:${site.contact.phone.replace(/\s/g, "")}`} class="flex items-start gap-3 text-sm text-fg-muted transition-colors hover:text-accent-hover">
+                <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent-hover"><Icon name="phone" size={18} /></span>
+                <span><span class="block font-semibold text-fg">Phone</span>{site.contact.phone}</span>
+              </a>
+            </li>
+            <li class="flex items-start gap-3 text-sm text-fg-muted">
+              <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent-hover"><Icon name="pin" size={18} /></span>
+              <span><span class="block font-semibold text-fg">Office</span>{site.address.street}, {site.address.city}, {site.address.region} {site.address.postalCode}, {site.address.country}</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Rather book a call -->
+        <div class="card mt-8 flex flex-col gap-3 p-6">
+          <div class="flex items-center gap-3">
+            <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-accent-soft text-accent-hover"><Icon name="calendar" size={20} /></span>
+            <h2 class="text-base font-semibold">Rather book a call?</h2>
+          </div>
+          <p class="text-sm leading-relaxed text-fg-muted">Grab a 30-minute slot with a senior engineer. No sales script — just a real conversation about your project.</p>
+          <div class="mt-1">
+            <Button href={site.contact.bookingUrl} variant="secondary" external arrow>Book a call</Button>
+          </div>
+        </div>
+      </div>
+
       <!-- Form -->
-      <div>
+      <div class="card p-6 sm:p-8">
         <form id="contact-form" class="flex flex-col gap-5" novalidate>
           <div class="grid gap-5 sm:grid-cols-2">
             <div class="flex flex-col gap-2">
@@ -86,40 +125,89 @@ const labelCls = "text-sm font-semibold text-fg";
           ></p>
         </form>
       </div>
+    </div>
+  </section>
 
-      <!-- Sidebar -->
-      <aside class="flex flex-col gap-6">
-        <div class="rounded-2xl border border-border bg-surface p-7">
-          <h2 class="text-lg font-bold">Reach us directly</h2>
-          <ul class="mt-5 flex flex-col gap-4">
-            <li>
-              <a href={`mailto:${site.contact.email}`} class="flex items-start gap-3 text-sm text-fg-muted transition-colors hover:text-accent">
-                <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent"><Icon name="mail" size={18} /></span>
-                <span><span class="block font-semibold text-fg">Email</span>{site.contact.email}</span>
-              </a>
-            </li>
-            <li>
-              <a href={`tel:${site.contact.phone.replace(/\s/g, "")}`} class="flex items-start gap-3 text-sm text-fg-muted transition-colors hover:text-accent">
-                <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent"><Icon name="phone" size={18} /></span>
-                <span><span class="block font-semibold text-fg">Phone</span>{site.contact.phone}</span>
-              </a>
-            </li>
-            <li class="flex items-start gap-3 text-sm text-fg-muted">
-              <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent"><Icon name="pin" size={18} /></span>
-              <span><span class="block font-semibold text-fg">Office</span>{site.address.street}, {site.address.city}, {site.address.region} {site.address.postalCode}, {site.address.country}</span>
-            </li>
-          </ul>
-        </div>
+  <!-- What to expect -->
+  <section class="border-t border-border bg-bg-2">
+    <div class="container-page py-20 md:py-28">
+      <SectionHeader
+        align="center"
+        class="mx-auto"
+        title={`What working with us <span class="accent-italic">looks like.</span>`}
+        description="Senior-led, direct, and accountable — here's what you can count on."
+      />
+      <div class="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          outcomes.map((o) => (
+            <div class="card flex items-center gap-4 p-6">
+              <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-accent-soft text-accent-hover">
+                <Icon name={o.icon} size={22} />
+              </span>
+              <p class="text-[0.98rem] font-medium leading-snug text-fg">{o.text}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
 
-        <div class="rounded-2xl border border-border bg-surface p-7">
-          <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-accent-soft text-accent"><Icon name="calendar" size={22} /></div>
-          <h2 class="mt-4 text-lg font-bold">Rather book a call?</h2>
-          <p class="mt-2 text-sm leading-relaxed text-fg-muted">Grab a 30-minute slot with a senior engineer. No sales script — just a real conversation about your project.</p>
-          <div class="mt-5">
-            <Button href={site.contact.bookingUrl} variant="secondary" external arrow>Book a call</Button>
-          </div>
-        </div>
-      </aside>
+  <!-- Trusted by (placeholder logos) -->
+  <section class="bg-bg-2 py-16">
+    <div class="marquee-mask container-page flex overflow-hidden">
+      <div class="marquee flex shrink-0 items-center gap-14 pr-14">
+        {
+          [...clients, ...clients].map((c) => (
+            <span
+              class="whitespace-nowrap text-xl font-semibold text-fg-muted/70"
+              style="font-family: var(--font-display)"
+            >
+              {c}
+            </span>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="border-t border-border bg-bg-2">
+    <div class="container-page py-20 md:py-28">
+      <SectionHeader
+        align="center"
+        class="mx-auto"
+        title={`In our clients' <span class="accent-italic">own words.</span>`}
+      />
+      <div class="mt-14 grid gap-5 md:grid-cols-3">
+        {
+          testimonials.map((t) => (
+            <figure class="card flex flex-col gap-5 p-7">
+              <blockquote class="text-[0.98rem] leading-relaxed text-fg">
+                “{t.quote}”
+              </blockquote>
+              <figcaption class="mt-auto flex items-center gap-3 border-t border-border-soft pt-5">
+                <img
+                  src={t.avatar}
+                  alt={t.name}
+                  width="44"
+                  height="44"
+                  loading="lazy"
+                  decoding="async"
+                  class="h-11 w-11 shrink-0 rounded-full object-cover"
+                />
+                <span class="flex flex-col">
+                  <span class="text-sm font-semibold text-fg">{t.name}</span>
+                  <span class="text-xs text-fg-subtle">{t.role}</span>
+                </span>
+              </figcaption>
+            </figure>
+          ))
+        }
+      </div>
+      <p class="mt-8 text-center text-xs text-fg-subtle">
+        Representative testimonials shown for layout; real, attributed quotes
+        added with client permission.
+      </p>
     </div>
   </section>
 </Layout>
