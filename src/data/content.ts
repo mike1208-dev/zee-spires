@@ -118,16 +118,6 @@ export const stats: { value: string; label: string }[] = [
   { value: "100%", label: "Senior-led engagements" },
 ];
 
-/** Industries we work across. */
-export const industries: string[] = [
-  "Fintech",
-  "Healthcare",
-  "SaaS & Platforms",
-  "E-commerce & Retail",
-  "Logistics",
-  "Professional Services",
-];
-
 /** Outcome / expectation cards (Contact page). */
 export const outcomes: { icon: Differentiator["icon"]; text: string }[] = [
   { icon: "spark", text: "Ship production AI systems, not demos" },
@@ -140,14 +130,15 @@ export const outcomes: { icon: Differentiator["icon"]; text: string }[] = [
 
 /** Client logos (placeholder wordmarks — replace with real clients). */
 export const clients: string[] = [
-  "Northwind",
-  "Acme Retail",
-  "Vertex Labs",
-  "Meridian",
-  "Lumen",
-  "Harbor",
-  "Cortex",
-  "Atlas",
+  "Fintech",
+  "AI Agent",
+  "Healthcare",
+  "Insurance",
+  "SaaS & Platforms",
+  "E-commerce & Retail",
+  "Logistics",
+  "IT Consulting",
+  "Professional Services",
 ];
 
 /**

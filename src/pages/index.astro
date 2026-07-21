@@ -6,7 +6,8 @@ import ServiceCard from "@/components/ServiceCard.astro";
 import CtaBand from "@/components/CtaBand.astro";
 import Icon from "@/components/Icon.astro";
 import { services } from "@/data/services";
-import { differentiators, stats, industries, clients, processSteps } from "@/data/content";
+import { stats, clients } from "@/data/content";
+import { engineers } from "@/data/engineers";
 import { site } from "@/data/site";
 ---
 
@@ -34,7 +35,7 @@ import { site } from "@/data/site";
           class="reveal text-shadow-hero text-[2.9rem] font-medium leading-[1.02] tracking-tight sm:text-6xl lg:text-7xl"
           data-delay="60"
         >
-          <span class="text-dim">Software built to</span><br />
+          Software built to<br />
           reach <span class="accent-italic">higher.</span>
         </h1>
 
@@ -94,7 +95,7 @@ import { site } from "@/data/site";
               class="text-4xl font-medium sm:text-5xl"
               style="font-family: var(--font-display)"
             >
-              <span class="accent-italic">{s.value}</span>
+              <span class="accent-italic" data-count={s.value}>{s.value}</span>
             </span>
             <span class="text-sm text-fg-muted">{s.label}</span>
           </div>
@@ -104,80 +105,107 @@ import { site } from "@/data/site";
     <div class="hairline mt-16"></div>
   </section>
 
-  <!-- Why us -->
-  <section class="container-page py-24 md:py-32">
-    <SectionHeader
-      title={`The differentiator is <span class="accent-italic">the people.</span>`}
-      description="We keep engagements senior-led and accountable, so you get judgment — not just hours."
-    />
-    <div class="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-      {
-        differentiators.map((d, i) => (
-          <div
-            class="card reveal flex flex-col gap-4 p-7 transition-colors duration-300 hover:border-accent/25"
-            data-delay={(i % 3) * 70}
-          >
-            <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-accent-soft text-accent-hover">
-              <Icon name={d.icon} size={22} />
-            </div>
-            <h3 class="text-lg font-semibold">{d.title}</h3>
-            <p class="text-sm leading-relaxed text-fg-muted">{d.description}</p>
-          </div>
-        ))
-      }
-    </div>
-  </section>
-
-  <!-- Process -->
-  <section class="border-t border-border bg-bg-2">
+  <!-- Engineers -->
+  <section id="engineers-preview" class="scroll-mt-24 border-t border-border bg-bg-2">
     <div class="container-page py-24 md:py-32">
-      <SectionHeader
-        align="center"
-        class="mx-auto"
-        title={`A process built for <span class="accent-italic">trust.</span>`}
-        description="No black boxes. You see the shape of the solution early, get working software often, and always know who's accountable."
-      />
-      <ol class="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
+      <div class="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+        <SectionHeader
+          title={`Built and run by <span class="accent-italic">senior engineers.</span>`}
+          description="Backgrounds at companies like Microsoft and IBM — and they're the people you'll work with directly."
+        />
+        <div class="reveal shrink-0">
+          <Button href="/engineers/" variant="secondary" arrow>
+            Meet the engineers
+          </Button>
+        </div>
+      </div>
+      <div class="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {
-          processSteps.map((step, i) => (
-            <li
-              class="card reveal flex flex-col gap-3 p-6"
-              data-delay={(i % 5) * 60}
+          engineers.slice(0, 3).map((eng, i) => (
+            <article
+              class="card reveal flex flex-col gap-5 p-7"
+              data-delay={i * 80}
             >
-              <span
-                class="text-2xl font-medium text-accent-hover"
-                style="font-family: var(--font-display)"
-              >
-                {step.number}
-              </span>
-              <h3 class="text-base font-semibold">{step.title}</h3>
-              <p class="text-sm leading-relaxed text-fg-muted">
-                {step.description}
-              </p>
-            </li>
+              <div class="flex items-center gap-4">
+                {eng.photo ? (
+                  <img
+                    src={eng.photo}
+                    alt={eng.name}
+                    width="56"
+                    height="56"
+                    loading="lazy"
+                    decoding="async"
+                    class="h-14 w-14 shrink-0 rounded-2xl object-cover"
+                  />
+                ) : (
+                  <div
+                    class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-border-soft bg-accent-soft text-lg font-semibold text-accent-hover"
+                    style="font-family: var(--font-display)"
+                    aria-hidden="true"
+                  >
+                    {eng.initials}
+                  </div>
+                )}
+                <div class="flex flex-col">
+                  <h3 class="text-lg font-semibold leading-tight">{eng.name}</h3>
+                  <p class="text-sm font-medium text-accent-hover">{eng.role}</p>
+                </div>
+              </div>
+              <p class="text-[0.95rem] leading-relaxed text-fg-muted">{eng.bio}</p>
+              <div class="mt-auto flex flex-wrap gap-2">
+                {eng.background.map((company) => (
+                  <span class="inline-flex items-center gap-1.5 rounded-full bg-accent-soft px-3 py-1 text-xs font-semibold text-accent-hover">
+                    <Icon name="spark" size={13} />
+                    ex-{company}
+                  </span>
+                ))}
+              </div>
+            </article>
           ))
         }
-      </ol>
-    </div>
-  </section>
-
-  <!-- Industries -->
-  <section class="border-y border-border bg-bg-2">
-    <div class="container-page py-16">
-      <div class="flex flex-col items-center gap-8 text-center">
-        <p class="text-sm font-medium uppercase tracking-[0.18em] text-fg-subtle">
-          Industries we work across
-        </p>
-        <div class="flex flex-wrap items-center justify-center gap-x-10 gap-y-4">
-          {
-            industries.map((ind) => (
-              <span class="text-lg font-medium text-fg-muted">{ind}</span>
-            ))
-          }
-        </div>
       </div>
     </div>
   </section>
-
   <CtaBand />
 </Layout>
+
+<script>
+  // Count-up animation for the stats (runs once when scrolled into view).
+  const els = document.querySelectorAll<HTMLElement>("[data-count]");
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  const run = (el: HTMLElement) => {
+    const raw = el.dataset.count ?? el.textContent ?? "";
+    const num = parseFloat(raw.replace(/[^0-9.]/g, ""));
+    if (!isFinite(num)) return;
+    const suffix = raw.replace(/[0-9.,]/g, ""); // e.g. "+", "%"
+    const dur = 1400;
+    const start = performance.now();
+    const tick = (now: number) => {
+      const t = Math.min((now - start) / dur, 1);
+      const eased = 1 - Math.pow(1 - t, 3); // easeOutCubic
+      el.textContent = Math.round(num * eased) + suffix;
+      if (t < 1) requestAnimationFrame(tick);
+      else el.textContent = raw;
+    };
+    requestAnimationFrame(tick);
+  };
+
+  if (reduce || !("IntersectionObserver" in window)) {
+    // leave final values as-is
+  } else {
+    els.forEach((el) => (el.textContent = "0" + (el.dataset.count ?? "").replace(/[0-9.,]/g, "")));
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            run(entry.target as HTMLElement);
+            io.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.4 }
+    );
+    els.forEach((el) => io.observe(el));
+  }
+</script>

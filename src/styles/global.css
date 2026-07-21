@@ -229,11 +229,20 @@
   /* Hairline-bordered dark card. */
   .card {
     background: linear-gradient(180deg, var(--surface) 0%, var(--bg-2) 100%);
-    border: 1px solid var(--border-soft);
+    border: 1px solid var(--border);
     border-radius: var(--radius-lg);
+    /* Always-on elevation. On the near-black theme a black drop shadow is
+       invisible, so depth comes from a lit top edge + clear border; the drop
+       shadow does the work on the light service pages. */
     box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.05),
-      var(--shadow-card);
+      inset 0 1px 0 rgba(255, 255, 255, 0.07),
+      0 18px 44px -22px rgba(0, 0, 0, 0.9);
+  }
+  :root[data-theme="light"] .card {
+    border-color: var(--border);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.9),
+      0 16px 40px -20px rgba(12, 18, 32, 0.22);
   }
 
   /* Soft radial violet glow (background accent). */
