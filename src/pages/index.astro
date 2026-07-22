@@ -74,13 +74,15 @@ import { site } from "@/data/site";
   </section>
 
   <!-- Services -->
-  <section class="container-page py-24 md:py-32">
-    <SectionHeader
-      title={`Four disciplines, <span class="accent-italic">one team.</span>`}
-      description="From autonomous AI systems to the data and products they run on — plus the senior people to advise or embed with yours."
-    />
-    <div class="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-      {services.map((s, i) => <ServiceCard service={s} index={i} />)}
+  <section class="relative overflow-hidden">
+    <div class="container-page relative py-24 md:py-32">
+      <SectionHeader
+        title={`Four disciplines, <span class="accent-italic">one team.</span>`}
+        description="From autonomous AI systems to the data and products they run on — plus the senior people to advise or embed with yours."
+      />
+      <div class="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        {services.map((s, i) => <ServiceCard service={s} index={i} />)}
+      </div>
     </div>
   </section>
 
@@ -106,8 +108,16 @@ import { site } from "@/data/site";
   </section>
 
   <!-- Engineers -->
-  <section id="engineers-preview" class="scroll-mt-24 border-t border-border bg-bg-2">
-    <div class="container-page py-24 md:py-32">
+  <section
+    id="engineers-preview"
+    class="relative scroll-mt-24 overflow-hidden border-t border-border"
+  >
+    <div
+      class="pointer-events-none absolute inset-0 bg-cover bg-left"
+      style="background-image: url(/bg/bg-01.jpg); filter: brightness(0.5) saturate(1.05);"
+    >
+    </div>
+    <div class="container-page relative py-24 md:py-32">
       <div class="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
         <SectionHeader
           title={`Built and run by <span class="accent-italic">senior engineers.</span>`}
