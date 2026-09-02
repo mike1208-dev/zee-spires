@@ -19,6 +19,9 @@ export default defineConfig({
     },
   },
   integrations: [sitemap()],
+  server: {
+    host: true,
+  },
   vite: {
     plugins: [tailwindcss()],
   },
