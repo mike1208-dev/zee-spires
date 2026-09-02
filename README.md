@@ -81,12 +81,6 @@ Most copy lives in [`src/data/`](src/data/) — English only:
 - **Team / engineers**: `engineers.ts`
 - **Stats, outcomes, client list, testimonials**: `content.ts`
 
-> ⚠️ **Placeholder content.** Marketing copy and engineer profiles are
-> polished placeholders. Company facts (name, address, email, phone) come from
-> the current zeespires.com and should be confirmed. Engineer profiles in
-> `engineers.ts` are **fictional** — replace with real people (with consent)
-> before launch. Testimonials and client names are placeholders too.
-
 ### Translations (`src/i18n/`)
 
 `src/data/*.ts` stays English-only; Japanese copy is layered on top rather
