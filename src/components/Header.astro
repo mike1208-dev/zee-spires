@@ -4,14 +4,24 @@ import Logo from "./Logo.astro";
 import Button from "./Button.astro";
 import Icon from "./Icon.astro";
 import { locales, localeNames } from "@/i18n/config";
-import { resolveLocale, useTranslations, getAlternateUrl } from "@/i18n/utils";
+import {
+  resolveLocale,
+  useTranslations,
+  getAlternateUrl,
+  localizeHref,
+} from "@/i18n/utils";
 
 const path = Astro.url.pathname;
-const isActive = (href: string) =>
-  href === "/" ? path === "/" : path.startsWith(href);
-
 const lang = resolveLocale(Astro.currentLocale);
 const t = useTranslations(lang);
+
+// Nav hrefs are canonical English paths; rewrite to this locale's equivalent
+// (falls through unchanged for routes with no translation yet).
+const href = (h: string) => localizeHref(h, lang);
+const isActive = (h: string) => {
+  const target = href(h);
+  return target === "/" || target === "/ja/" ? path === target : path.startsWith(target);
+};
 ---
 
 <header
@@ -50,10 +60,11 @@ const t = useTranslations(lang);
                   <div class="card w-72 p-2 shadow-[var(--shadow-float)]">
                     {item.children.map((c) => (
                       <a
-                        href={c.href}
+                        href={href(c.href)}
                         aria-current={
-                          path === c.href ||
-                          (c.href !== "/services/" && path.startsWith(c.href))
+                          path === href(c.href) ||
+                          (href(c.href) !== href("/services/") &&
+                            path.startsWith(href(c.href)))
                             ? "page"
                             : undefined
                         }
@@ -67,7 +78,7 @@ const t = useTranslations(lang);
               </div>
             ) : (
               <a
-                href={item.href}
+                href={href(item.href)}
                 aria-current={isActive(item.href) ? "page" : undefined}
                 class:list={[
                   "px-3.5 py-2 text-sm font-medium transition-colors",
@@ -110,7 +121,7 @@ const t = useTranslations(lang);
           }
         </div>
         <div class="hidden sm:block">
-          <Button href="/contact/" size="md" arrow>{t("cta.startProject")}</Button>
+          <Button href={href("/contact/")} size="md" arrow>{t("cta.startProject")}</Button>
         </div>
         <button
           id="menu-open"
@@ -154,7 +165,7 @@ const t = useTranslations(lang);
                 <div class="ml-3 flex flex-col gap-0.5 border-l border-border pl-4">
                   {item.children.map((c) => (
                     <a
-                      href={c.href}
+                      href={href(c.href)}
                       class="rounded-lg px-3 py-2.5 text-base text-fg-muted transition-colors hover:text-accent-hover"
                     >
                       {t(c.labelKey)}
@@ -164,7 +175,7 @@ const t = useTranslations(lang);
               </Fragment>
             ) : (
               <a
-                href={item.href}
+                href={href(item.href)}
                 class:list={[
                   "rounded-xl px-4 py-3.5 text-lg font-medium transition-colors",
                   isActive(item.href)
@@ -202,7 +213,7 @@ const t = useTranslations(lang);
           }
         </div>
         <div class="mt-4">
-          <Button href="/contact/" size="lg" arrow class="w-full">
+          <Button href={href("/contact/")} size="lg" arrow class="w-full">
             {t("cta.startProject")}
           </Button>
         </div>

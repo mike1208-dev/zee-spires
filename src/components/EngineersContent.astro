@@ -1,0 +1,98 @@
+---
+/**
+ * Engineers page body, shared by src/pages/engineers.astro (en) and
+ * src/pages/ja/engineers.astro (ja).
+ */
+import PageHero from "@/components/PageHero.astro";
+import CtaBand from "@/components/CtaBand.astro";
+import Icon from "@/components/Icon.astro";
+import { engineers } from "@/data/engineers";
+import { resolveLocale, useTranslations } from "@/i18n/utils";
+import { localizeEngineer } from "@/i18n/translations";
+
+const lang = resolveLocale(Astro.currentLocale);
+const t = useTranslations(lang);
+const localizedEngineers = engineers.map((eng) => localizeEngineer(eng, lang));
+---
+
+<PageHero
+  title={t("engineersPage.heroTitle")}
+  description={t("engineersPage.heroDescription")}
+/>
+
+<!-- Engineer grid -->
+<section class="container-page py-20 md:py-28">
+  <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    {
+      localizedEngineers.map((eng, i) => (
+        <article
+          class="card reveal group flex flex-col gap-5 p-7 transition-colors duration-300 hover:border-accent/30"
+          data-delay={(i % 3) * 80}
+        >
+          <div class="flex items-center gap-4">
+            {eng.photo ? (
+              <img
+                src={eng.photo}
+                alt={eng.name}
+                width="56"
+                height="56"
+                loading="lazy"
+                decoding="async"
+                class="h-14 w-14 shrink-0 rounded-2xl object-cover"
+              />
+            ) : (
+              <div
+                class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-border-soft bg-accent-soft text-lg font-semibold text-accent-hover"
+                style="font-family: var(--font-display)"
+                aria-hidden="true"
+              >
+                {eng.initials}
+              </div>
+            )}
+            <div class="flex flex-col">
+              <h2 class="text-lg font-semibold leading-tight">{eng.name}</h2>
+              <p class="text-sm font-medium text-accent-hover">{eng.role}</p>
+            </div>
+          </div>
+
+          <p class="text-[0.95rem] leading-relaxed text-fg-muted">
+            {eng.bio}
+          </p>
+
+          <div class="flex flex-wrap gap-2">
+            {eng.background.map((company) => (
+              <span class="inline-flex items-center gap-1.5 rounded-full bg-accent-soft px-3 py-1 text-xs font-semibold text-accent-hover">
+                <Icon name="spark" size={13} />
+                {t("home.engineers.exPrefix")}{company}
+              </span>
+            ))}
+          </div>
+
+          <div class="mt-auto flex flex-col gap-3 border-t border-border-soft pt-5">
+            <div class="flex flex-wrap gap-1.5">
+              {eng.specialties.map((sp) => (
+                <span class="rounded-md border border-border-soft bg-surface/60 px-2.5 py-1 text-xs font-medium text-fg-muted">
+                  {sp}
+                </span>
+              ))}
+            </div>
+            <p class="flex items-center gap-1.5 text-xs text-fg-subtle">
+              <Icon name="pin" size={13} />
+              {eng.location}
+            </p>
+          </div>
+        </article>
+      ))
+    }
+  </div>
+
+  <!-- Consent / placeholder note -->
+  <p class="mt-10 max-w-2xl text-sm text-fg-subtle">
+    {t("engineersPage.consentNote")}
+  </p>
+</section>
+
+<CtaBand
+  title={t("engineersPage.ctaTitle")}
+  description={t("engineersPage.ctaDescription")}
+/>

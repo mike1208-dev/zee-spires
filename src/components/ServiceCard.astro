@@ -1,7 +1,7 @@
 ---
 import type { Service } from "@/data/services";
 import Icon from "./Icon.astro";
-import { resolveLocale, useTranslations } from "@/i18n/utils";
+import { resolveLocale, useTranslations, localizeHref } from "@/i18n/utils";
 
 interface Props {
   service: Service;
@@ -9,8 +9,9 @@ interface Props {
 }
 const { service, index = 0 } = Astro.props;
 const num = String(index + 1).padStart(2, "0");
-const url = `/services/${service.slug}/`;
-const t = useTranslations(resolveLocale(Astro.currentLocale));
+const lang = resolveLocale(Astro.currentLocale);
+const url = localizeHref(`/services/${service.slug}/`, lang);
+const t = useTranslations(lang);
 ---
 
 <a

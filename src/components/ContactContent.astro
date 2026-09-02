@@ -1,0 +1,284 @@
+---
+/**
+ * Contact page body, shared by src/pages/contact.astro (en) and
+ * src/pages/ja/contact.astro (ja).
+ */
+import Button from "@/components/Button.astro";
+import Icon from "@/components/Icon.astro";
+import SectionHeader from "@/components/SectionHeader.astro";
+import { site } from "@/data/site";
+import { services } from "@/data/services";
+import { outcomes, clients, testimonials } from "@/data/content";
+import { resolveLocale, useTranslations } from "@/i18n/utils";
+import {
+  localizeService,
+  localizeOutcomes,
+  localizeClients,
+  localizeTestimonials,
+} from "@/i18n/translations";
+
+const lang = resolveLocale(Astro.currentLocale);
+const t = useTranslations(lang);
+const localizedServices = services.map((s) => localizeService(s, lang));
+const localizedOutcomes = localizeOutcomes(outcomes, lang);
+const localizedClients = localizeClients(clients, lang);
+const localizedTestimonials = localizeTestimonials(testimonials, lang);
+
+const inputCls =
+  "w-full rounded-xl border border-border-soft bg-surface/60 px-4 py-3 text-fg placeholder:text-fg-subtle transition-colors focus:border-accent focus:outline-none";
+const labelCls = "text-sm font-semibold text-fg";
+---
+
+<section class="container-page pt-16 pb-20 md:pt-24 md:pb-28">
+  <div class="grid gap-12 lg:grid-cols-[1fr_1.05fr] lg:gap-16">
+    <!-- Title + contents, with contact details below -->
+    <div class="flex flex-col">
+      <h1 class="text-4xl font-medium leading-[1.05] tracking-tight sm:text-5xl md:text-6xl">
+        <Fragment set:html={t("contactPage.heroTitle")} />
+      </h1>
+      <p class="mt-6 max-w-xl text-lg leading-relaxed text-fg-muted">
+        {t("contactPage.heroDescription")}
+      </p>
+
+      <!-- Reach us directly -->
+      <div class="mt-10">
+        <h2 class="text-sm font-semibold uppercase tracking-[0.16em] text-accent-hover">
+          {t("contactPage.reachUsDirectly")}
+        </h2>
+        <ul class="mt-5 flex flex-col gap-4">
+          <li>
+            <a href={`mailto:${site.contact.email}`} class="flex items-start gap-3 text-sm text-fg-muted transition-colors hover:text-accent-hover">
+              <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent-hover"><Icon name="mail" size={18} /></span>
+              <span><span class="block font-semibold text-fg">{t("contactPage.emailLabel")}</span>{site.contact.email}</span>
+            </a>
+          </li>
+          <li>
+            <a href={`tel:${site.contact.phone.replace(/\s/g, "")}`} class="flex items-start gap-3 text-sm text-fg-muted transition-colors hover:text-accent-hover">
+              <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent-hover"><Icon name="phone" size={18} /></span>
+              <span><span class="block font-semibold text-fg">{t("contactPage.phoneLabel")}</span>{site.contact.phone}</span>
+            </a>
+          </li>
+          <li class="flex items-start gap-3 text-sm text-fg-muted">
+            <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent-hover"><Icon name="pin" size={18} /></span>
+            <span><span class="block font-semibold text-fg">{t("contactPage.officeLabel")}</span>{site.address.street}, {site.address.city}, {site.address.region} {site.address.postalCode}, {site.address.country}</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Rather book a call -->
+      <div class="card mt-8 flex flex-col gap-3 p-6">
+        <div class="flex items-center gap-3">
+          <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-accent-soft text-accent-hover"><Icon name="calendar" size={20} /></span>
+          <h2 class="text-base font-semibold">{t("contactPage.bookCallTitle")}</h2>
+        </div>
+        <p class="text-sm leading-relaxed text-fg-muted">{t("contactPage.bookCallDescription")}</p>
+        <div class="mt-1">
+          <Button href={site.contact.bookingUrl} variant="secondary" external arrow>{t("contactPage.bookCallCta")}</Button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form -->
+    <div class="card p-6 sm:p-8">
+      <form id="contact-form" class="flex flex-col gap-5" novalidate>
+        <div class="grid gap-5 sm:grid-cols-2">
+          <div class="flex flex-col gap-2">
+            <label class={labelCls} for="name">{t("contactPage.form.nameLabel")} <span class="text-accent">*</span></label>
+            <input class={inputCls} type="text" id="name" name="name" required autocomplete="name" placeholder={t("contactPage.form.namePlaceholder")} />
+          </div>
+          <div class="flex flex-col gap-2">
+            <label class={labelCls} for="email">{t("contactPage.form.emailLabel")} <span class="text-accent">*</span></label>
+            <input class={inputCls} type="email" id="email" name="email" required autocomplete="email" placeholder={t("contactPage.form.emailPlaceholder")} />
+          </div>
+        </div>
+
+        <div class="grid gap-5 sm:grid-cols-2">
+          <div class="flex flex-col gap-2">
+            <label class={labelCls} for="company">{t("contactPage.form.companyLabel")}</label>
+            <input class={inputCls} type="text" id="company" name="company" autocomplete="organization" placeholder={t("contactPage.form.companyPlaceholder")} />
+          </div>
+          <div class="flex flex-col gap-2">
+            <label class={labelCls} for="service">{t("contactPage.form.serviceLabel")}</label>
+            <select class={inputCls} id="service" name="service">
+              <option value="">{t("contactPage.form.selectPlaceholder")}</option>
+              {localizedServices.map((s) => <option value={s.title}>{s.title}</option>)}
+              <option value="Other">{t("contactPage.form.otherOption")}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <label class={labelCls} for="message">{t("contactPage.form.messageLabel")} <span class="text-accent">*</span></label>
+          <textarea class={`${inputCls} min-h-36 resize-y`} id="message" name="message" required placeholder={t("contactPage.form.messagePlaceholder")}></textarea>
+        </div>
+
+        <!-- Honeypot field for basic spam protection (hidden from users). -->
+        <div class="absolute left-[-9999px]" aria-hidden="true">
+          <label for="company_website">{t("contactPage.form.honeypotLabel")}</label>
+          <input type="text" id="company_website" name="company_website" tabindex="-1" autocomplete="off" />
+        </div>
+
+        <div class="flex flex-col gap-4 pt-2 sm:flex-row sm:items-center">
+          <Button type="submit" size="lg" arrow class="sm:w-auto">
+            <span data-submit-label>{t("contactPage.form.submitLabel")}</span>
+          </Button>
+          <p class="text-sm text-fg-subtle">
+            {t("contactPage.form.preferEmail")} <a class="font-medium text-accent hover:underline" href={`mailto:${site.contact.email}`}>{site.contact.email}</a>
+          </p>
+        </div>
+
+        <!-- Status region (announced to screen readers). -->
+        <p
+          id="form-status"
+          role="status"
+          aria-live="polite"
+          class="hidden rounded-xl px-4 py-3 text-sm font-medium"
+        ></p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- What to expect -->
+<section class="border-t border-border bg-bg-2">
+  <div class="container-page py-20 md:py-28">
+    <SectionHeader
+      align="center"
+      class="mx-auto"
+      title={t("contactPage.outcomesTitle")}
+      description={t("contactPage.outcomesDescription")}
+    />
+    <div class="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        localizedOutcomes.map((o) => (
+          <div class="card flex items-center gap-4 p-6">
+            <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-accent-soft text-accent-hover">
+              <Icon name={o.icon} size={22} />
+            </span>
+            <p class="text-[0.98rem] font-medium leading-snug text-fg">{o.text}</p>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<!-- Trusted by (placeholder logos) -->
+<section class="bg-bg-2 py-16">
+  <div class="marquee-mask container-page flex overflow-hidden">
+    <div class="marquee flex shrink-0 items-center gap-14 pr-14">
+      {
+        [...localizedClients, ...localizedClients].map((c) => (
+          <span
+            class="whitespace-nowrap text-xl font-semibold text-fg-muted/70"
+            style="font-family: var(--font-display)"
+          >
+            {c}
+          </span>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials -->
+<section class="border-t border-border bg-bg-2">
+  <div class="container-page py-20 md:py-28">
+    <SectionHeader
+      align="center"
+      class="mx-auto"
+      title={t("contactPage.testimonialsTitle")}
+    />
+    <div class="mt-14 grid gap-5 md:grid-cols-3">
+      {
+        localizedTestimonials.map((item) => (
+          <figure class="card flex flex-col gap-5 p-7">
+            <blockquote class="text-[0.98rem] leading-relaxed text-fg">
+              “{item.quote}”
+            </blockquote>
+            <figcaption class="mt-auto flex items-center gap-3 border-t border-border-soft pt-5">
+              <img
+                src={item.avatar}
+                alt={item.name}
+                width="44"
+                height="44"
+                loading="lazy"
+                decoding="async"
+                class="h-11 w-11 shrink-0 rounded-full object-cover"
+              />
+              <span class="flex flex-col">
+                <span class="text-sm font-semibold text-fg">{item.name}</span>
+                <span class="text-xs text-fg-subtle">{item.role}</span>
+              </span>
+            </figcaption>
+          </figure>
+        ))
+      }
+    </div>
+    <p class="mt-8 text-center text-xs text-fg-subtle">
+      {t("contactPage.testimonialsFootnote")}
+    </p>
+  </div>
+</section>
+
+<script
+  is:inline
+  define:vars={{
+    MSG_SENDING: t("contactPage.form.sendingLabel"),
+    MSG_SUBMIT: t("contactPage.form.submitLabel"),
+    MSG_SUCCESS: t("contactPage.form.successMessage"),
+    MSG_SENT: t("contactPage.form.sentLabel"),
+    MSG_GENERIC_ERROR: t("contactPage.form.genericError"),
+    MSG_NETWORK_ERROR: t("contactPage.form.networkError"),
+  }}
+>
+  const form = document.getElementById("contact-form");
+  const status = document.getElementById("form-status");
+  const submitBtn = form?.querySelector('button[type="submit"]');
+  const label = form?.querySelector("[data-submit-label]");
+
+  const show = (msg, ok) => {
+    if (!status) return;
+    status.textContent = msg;
+    status.classList.remove("hidden");
+    status.style.background = ok
+      ? "color-mix(in srgb, var(--accent) 12%, transparent)"
+      : "color-mix(in srgb, #ef4444 12%, transparent)";
+    status.style.color = ok ? "var(--accent)" : "#dc2626";
+  };
+
+  form?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+
+    const data = Object.fromEntries(new FormData(form).entries());
+    if (submitBtn) submitBtn.disabled = true;
+    if (label) label.textContent = MSG_SENDING;
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      // The API's error text is English-only; show a localized generic
+      // message instead of relaying it verbatim on non-English pages.
+      if (res.ok) {
+        form.reset();
+        show(MSG_SUCCESS, true);
+        if (label) label.textContent = MSG_SENT;
+      } else {
+        show(MSG_GENERIC_ERROR, false);
+        if (submitBtn) submitBtn.disabled = false;
+        if (label) label.textContent = MSG_SUBMIT;
+      }
+    } catch {
+      show(MSG_NETWORK_ERROR, false);
+      if (submitBtn) submitBtn.disabled = false;
+      if (label) label.textContent = MSG_SUBMIT;
+    }
+  });
+</script>

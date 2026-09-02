@@ -13,7 +13,7 @@ import Icon from "@/components/Icon.astro";
 import { services } from "@/data/services";
 import { stats, clients } from "@/data/content";
 import { engineers } from "@/data/engineers";
-import { resolveLocale, useTranslations } from "@/i18n/utils";
+import { resolveLocale, useTranslations, localizeHref } from "@/i18n/utils";
 import {
   localizeService,
   localizeStats,
@@ -67,7 +67,7 @@ const previewEngineers = engineers
       </p>
 
       <div class="reveal mt-9" data-delay="180">
-        <Button href="/contact/" size="lg" arrow>{t("cta.startProject")}</Button>
+        <Button href={localizeHref("/contact/", lang)} size="lg" arrow>{t("cta.startProject")}</Button>
       </div>
 
       <!-- Client logo marquee, just under the CTA -->
@@ -142,7 +142,7 @@ const previewEngineers = engineers
         description={t("home.engineers.description")}
       />
       <div class="reveal shrink-0">
-        <Button href="/engineers/" variant="secondary" arrow>
+        <Button href={localizeHref("/engineers/", lang)} variant="secondary" arrow>
           {t("home.engineers.cta")}
         </Button>
       </div>

@@ -19,11 +19,42 @@ export function useTranslations(locale: Locale) {
  * Routes that currently have a real page in every locale, keyed by their
  * locale-agnostic (English) path. As more pages get translated, add their
  * path here — the language switcher and hreflang tags use this map to link
- * to the exact equivalent page instead of falling back to the homepage.
+ * to the exact equivalent page instead of falling back to the homepage, and
+ * `localizeHref` uses it to rewrite hardcoded English hrefs found in nav /
+ * data / components to the current locale.
  */
 export const translatedRoutes: Record<string, Record<Locale, string>> = {
   "/": { en: "/", ja: "/ja/" },
+  "/services/": { en: "/services/", ja: "/ja/services/" },
+  "/services/ai-agent-development/": {
+    en: "/services/ai-agent-development/",
+    ja: "/ja/services/ai-agent-development/",
+  },
+  "/services/data-engineering/": {
+    en: "/services/data-engineering/",
+    ja: "/ja/services/data-engineering/",
+  },
+  "/services/full-stack-development/": {
+    en: "/services/full-stack-development/",
+    ja: "/ja/services/full-stack-development/",
+  },
+  "/services/it-consulting-staffing/": {
+    en: "/services/it-consulting-staffing/",
+    ja: "/ja/services/it-consulting-staffing/",
+  },
+  "/engineers/": { en: "/engineers/", ja: "/ja/engineers/" },
+  "/contact/": { en: "/contact/", ja: "/ja/contact/" },
 };
+
+/**
+ * Rewrites a hardcoded (English) internal href to its equivalent in `lang`,
+ * for links embedded in nav/data/components rather than derived from the
+ * current URL. Falls through unchanged for routes with no translation yet
+ * (e.g. still-untranslated pages), so `lang === "en"` is always a no-op.
+ */
+export function localizeHref(href: string, lang: Locale): string {
+  return translatedRoutes[href]?.[lang] ?? href;
+}
 
 /** Strips a known locale prefix off a pathname, returning the bare (English) path. */
 export function stripLocale(pathname: string): { locale: Locale; path: string } {

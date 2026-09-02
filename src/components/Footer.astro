@@ -3,7 +3,7 @@ import { site, nav } from "@/data/site";
 import { services } from "@/data/services";
 import Logo from "./Logo.astro";
 import Icon from "./Icon.astro";
-import { resolveLocale, useTranslations } from "@/i18n/utils";
+import { resolveLocale, useTranslations, localizeHref } from "@/i18n/utils";
 import { localizeService } from "@/i18n/translations";
 
 const year = new Date().getFullYear();
@@ -60,7 +60,7 @@ const localizedServices = services.map((s) => localizeService(s, lang));
             nav.map((item) => (
               <li>
                 <a
-                  href={item.href}
+                  href={localizeHref(item.href, lang)}
                   class="text-sm text-fg-muted transition-colors hover:text-accent"
                 >
                   {t(item.labelKey)}
@@ -79,7 +79,7 @@ const localizedServices = services.map((s) => localizeService(s, lang));
             localizedServices.map((s) => (
               <li>
                 <a
-                  href={`/services/${s.slug}/`}
+                  href={localizeHref(`/services/${s.slug}/`, lang)}
                   class="text-sm text-fg-muted transition-colors hover:text-accent-hover"
                 >
                   {s.title}

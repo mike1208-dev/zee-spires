@@ -1,0 +1,31 @@
+---
+/**
+ * Services overview page body, shared by src/pages/services/index.astro (en)
+ * and src/pages/ja/services/index.astro (ja).
+ */
+import PageHero from "@/components/PageHero.astro";
+import ServiceCard from "@/components/ServiceCard.astro";
+import CtaBand from "@/components/CtaBand.astro";
+import { services } from "@/data/services";
+import { resolveLocale, useTranslations } from "@/i18n/utils";
+import { localizeService } from "@/i18n/translations";
+
+const lang = resolveLocale(Astro.currentLocale);
+const t = useTranslations(lang);
+const localizedServices = services.map((s) => localizeService(s, lang));
+---
+
+<PageHero
+  title={t("servicesPage.heroTitle")}
+  description={t("servicesPage.heroDescription")}
+  video="/videos/svc-overview.mp4"
+  startCta
+/>
+
+<section class="container-page py-20 md:py-28">
+  <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+    {localizedServices.map((s, i) => <ServiceCard service={s} index={i} />)}
+  </div>
+</section>
+
+<CtaBand />

@@ -7,6 +7,7 @@
  * `title` accepts HTML (for gradient <span> emphasis).
  */
 import Button from "./Button.astro";
+import { resolveLocale, useTranslations, localizeHref } from "@/i18n/utils";
 
 interface Props {
   /** Deprecated — eyebrows removed site-wide; kept optional for compatibility. */
@@ -19,6 +20,9 @@ interface Props {
   startCta?: boolean;
 }
 const { title, description, video, startCta = false } = Astro.props;
+
+const lang = resolveLocale(Astro.currentLocale);
+const t = useTranslations(lang);
 ---
 
 <section
@@ -84,8 +88,8 @@ const { title, description, video, startCta = false } = Astro.props;
       {
         startCta && (
           <div class="reveal mt-9" data-delay="180">
-            <Button href="/contact/" size="lg" arrow>
-              Start a project
+            <Button href={localizeHref("/contact/", lang)} size="lg" arrow>
+              {t("cta.startProject")}
             </Button>
           </div>
         )
