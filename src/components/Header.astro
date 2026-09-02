@@ -12,7 +12,6 @@ const isActive = (href: string) =>
 
 const lang = resolveLocale(Astro.currentLocale);
 const t = useTranslations(lang);
-const otherLocales = locales.filter((l) => l !== lang);
 ---
 
 <header
@@ -86,16 +85,28 @@ const otherLocales = locales.filter((l) => l !== lang);
 
       <div class="flex items-center gap-3">
         <!-- Language switcher -->
-        <div class="hidden items-center gap-1 sm:flex" aria-label={t("lang.switchAria")}>
+        <div
+          class="hidden items-center rounded-full border border-border-strong bg-fg/5 p-1 backdrop-blur-sm sm:flex"
+          aria-label={t("lang.switchAria")}
+        >
           {
-            otherLocales.map((l) => (
-              <a
-                href={getAlternateUrl(path, l)}
-                class="rounded-full px-2.5 py-1.5 text-sm font-medium text-fg-muted transition-colors hover:text-accent-hover"
-              >
-                {localeNames[l]}
-              </a>
-            ))
+            locales.map((l) =>
+              l === lang ? (
+                <span
+                  class="rounded-full bg-accent-soft px-3 py-1 text-sm font-semibold text-accent-hover"
+                  aria-current="true"
+                >
+                  {localeNames[l]}
+                </span>
+              ) : (
+                <a
+                  href={getAlternateUrl(path, l)}
+                  class="rounded-full px-3 py-1 text-sm font-medium text-fg-muted transition-colors hover:text-fg"
+                >
+                  {localeNames[l]}
+                </a>
+              )
+            )
           }
         </div>
         <div class="hidden sm:block">
@@ -166,16 +177,28 @@ const otherLocales = locales.filter((l) => l !== lang);
             )
           )
         }
-        <div class="mt-3 flex items-center gap-1" aria-label={t("lang.switchAria")}>
+        <div
+          class="mt-3 inline-flex items-center self-start rounded-full border border-border-strong bg-fg/5 p-1"
+          aria-label={t("lang.switchAria")}
+        >
           {
-            otherLocales.map((l) => (
-              <a
-                href={getAlternateUrl(path, l)}
-                class="rounded-full px-4 py-2 text-base font-medium text-fg-muted transition-colors hover:text-accent-hover"
-              >
-                {localeNames[l]}
-              </a>
-            ))
+            locales.map((l) =>
+              l === lang ? (
+                <span
+                  class="rounded-full bg-accent-soft px-4 py-1.5 text-base font-semibold text-accent-hover"
+                  aria-current="true"
+                >
+                  {localeNames[l]}
+                </span>
+              ) : (
+                <a
+                  href={getAlternateUrl(path, l)}
+                  class="rounded-full px-4 py-1.5 text-base font-medium text-fg-muted transition-colors hover:text-fg"
+                >
+                  {localeNames[l]}
+                </a>
+              )
+            )
           }
         </div>
         <div class="mt-4">
