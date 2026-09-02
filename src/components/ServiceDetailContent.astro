@@ -1,0 +1,142 @@
+---
+/**
+ * Service detail page body, shared by src/pages/services/[slug].astro (en)
+ * and src/pages/ja/services/[slug].astro (ja).
+ */
+import PageHero from "@/components/PageHero.astro";
+import CtaBand from "@/components/CtaBand.astro";
+import Button from "@/components/Button.astro";
+import Icon from "@/components/Icon.astro";
+import type { Service } from "@/data/services";
+import { services } from "@/data/services";
+import { resolveLocale, useTranslations, localizeHref } from "@/i18n/utils";
+import { localizeService } from "@/i18n/translations";
+
+interface Props {
+  /** Already localized by the caller (the caller needs it localized too, for Layout's meta). */
+  service: Service;
+}
+const { service: s } = Astro.props;
+
+const lang = resolveLocale(Astro.currentLocale);
+const t = useTranslations(lang);
+const others = services
+  .filter((x) => x.slug !== s.slug)
+  .map((x) => localizeService(x, lang));
+
+// Background hero video per service.
+const videos: Record<string, string> = {
+  "ai-agent-development": "/videos/svc-ai.mp4",
+  "data-engineering": "/videos/svc-data.mp4",
+  "full-stack-development": "/videos/svc-fullstack.mp4",
+  "it-consulting-staffing": "/videos/svc-consulting.mp4",
+};
+const heroVideo = videos[s.slug];
+
+// The lowercasing is an English mid-sentence casing convention, not
+// translated content — the actual copy comes from ui.ts like everything else.
+const discussLabel = `${t("serviceDetail.discussPrefix")}${
+  lang === "en" ? s.title.toLowerCase() : s.title
+}${t("serviceDetail.discussSuffix")}`;
+---
+
+<PageHero title={s.title} description={s.tagline} video={heroVideo} startCta />
+
+<section class="container-page py-20 md:py-28">
+  <div class="grid gap-10 lg:grid-cols-[1fr_1.05fr] lg:gap-16">
+    <!-- Left: overview -->
+    <div class="reveal flex flex-col gap-6">
+      <div
+        class="flex h-14 w-14 items-center justify-center rounded-2xl bg-accent-soft text-accent-hover"
+      >
+        <Icon name={s.icon} size={28} />
+      </div>
+      <p class="text-lg leading-relaxed text-fg-muted">
+        {s.description}
+      </p>
+
+      <div class="flex flex-col gap-3 pt-2">
+        <h3 class="text-xs font-semibold uppercase tracking-[0.16em] text-fg-subtle">
+          {t("serviceDetail.technologies")}
+        </h3>
+        <div class="flex flex-wrap gap-2">
+          {
+            s.stack.map((tech) => (
+              <span class="rounded-full border border-border-soft bg-surface/60 px-3 py-1.5 text-xs font-medium text-fg-muted">
+                {tech}
+              </span>
+            ))
+          }
+        </div>
+      </div>
+
+      <div class="pt-2">
+        <Button href={localizeHref("/contact/", lang)} size="lg" arrow>
+          {discussLabel}
+        </Button>
+      </div>
+    </div>
+
+    <!-- Right: what you get -->
+    <div class="reveal" data-delay="100">
+      <div class="card p-7 md:p-9">
+        <h3 class="text-xs font-semibold uppercase tracking-[0.16em] text-accent-hover">
+          {t("serviceDetail.whatYouGet")}
+        </h3>
+        <ul class="mt-6 flex flex-col gap-4">
+          {
+            s.capabilities.map((cap) => (
+              <li class="flex items-start gap-3">
+                <span class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent-hover">
+                  <Icon name="check" size={15} />
+                </span>
+                <span class="text-[0.98rem] leading-relaxed text-fg">{cap}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Explore other services -->
+<section class="border-t border-border bg-bg-2">
+  <div class="container-page py-16 md:py-20">
+    <div class="flex items-center justify-between gap-4">
+      <h2 class="text-xl font-medium tracking-tight sm:text-2xl">
+        {t("serviceDetail.exploreOthers")}
+      </h2>
+      <a
+        href={localizeHref("/services/", lang)}
+        class="inline-flex items-center gap-1.5 text-sm font-semibold text-fg-muted transition-colors hover:text-accent-hover"
+      >
+        {t("serviceDetail.allServices")}
+        <Icon name="arrow" size={16} />
+      </a>
+    </div>
+    <div class="mt-8 grid gap-4 sm:grid-cols-3">
+      {
+        others.map((o) => (
+          <a
+            href={localizeHref(`/services/${o.slug}/`, lang)}
+            class="card group flex items-center gap-4 p-5 transition-colors duration-300 hover:border-accent/30"
+          >
+            <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-accent-soft text-accent-hover">
+              <Icon name={o.icon} size={20} />
+            </span>
+            <span class="flex flex-col">
+              <span class="font-semibold leading-tight">{o.title}</span>
+              <span class="mt-0.5 inline-flex items-center gap-1 text-sm text-fg-subtle transition-colors group-hover:text-accent-hover">
+                {t("service.learnMore")}
+                <Icon name="arrow" size={14} class="transition-transform group-hover:translate-x-0.5" />
+              </span>
+            </span>
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<CtaBand />

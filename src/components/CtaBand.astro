@@ -1,15 +1,16 @@
 ---
 import { site } from "@/data/site";
 import Button from "./Button.astro";
+import { resolveLocale, useTranslations, localizeHref } from "@/i18n/utils";
 
 interface Props {
   title?: string;
   description?: string;
 }
-const {
-  title = 'Let\'s build something <span class="accent-italic">higher.</span>',
-  description = "Tell us what you're trying to build. You'll talk directly to senior engineers — no account managers, no runaround.",
-} = Astro.props;
+const lang = resolveLocale(Astro.currentLocale);
+const t = useTranslations(lang);
+const { title = t("ctaBand.title"), description = t("ctaBand.description") } =
+  Astro.props;
 ---
 
 <section class="container-page py-24 md:py-32">
@@ -27,9 +28,9 @@ const {
       </h2>
       <p class="text-lg text-fg-muted">{description}</p>
       <div class="flex flex-col gap-3 sm:flex-row">
-        <Button href="/contact/" size="lg" arrow>Start a project</Button>
+        <Button href={localizeHref("/contact/", lang)} size="lg" arrow>{t("cta.startProject")}</Button>
         <Button href={`mailto:${site.contact.email}`} variant="secondary" size="lg">
-          Email us
+          {t("cta.emailUs")}
         </Button>
       </div>
     </div>

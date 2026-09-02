@@ -1,0 +1,238 @@
+---
+/**
+ * Home page body, shared by src/pages/index.astro (en) and
+ * src/pages/ja/index.astro (ja). Kept as one template — driven by
+ * Astro.currentLocale — so the two locales can't drift out of sync in markup,
+ * only in copy (via src/i18n).
+ */
+import Button from "@/components/Button.astro";
+import SectionHeader from "@/components/SectionHeader.astro";
+import ServiceCard from "@/components/ServiceCard.astro";
+import CtaBand from "@/components/CtaBand.astro";
+import Icon from "@/components/Icon.astro";
+import { services } from "@/data/services";
+import { stats, clients } from "@/data/content";
+import { engineers } from "@/data/engineers";
+import { resolveLocale, useTranslations, localizeHref } from "@/i18n/utils";
+import {
+  localizeService,
+  localizeStats,
+  localizeClients,
+  localizeEngineer,
+} from "@/i18n/translations";
+
+const lang = resolveLocale(Astro.currentLocale);
+const t = useTranslations(lang);
+
+const localizedServices = services.map((s) => localizeService(s, lang));
+const localizedStats = localizeStats(stats, lang);
+const localizedClients = localizeClients(clients, lang);
+const previewEngineers = engineers
+  .slice(0, 3)
+  .map((eng) => localizeEngineer(eng, lang));
+---
+
+<!-- Hero (full-screen video, pulled up behind the transparent header) -->
+<section class="relative -mt-18 overflow-hidden">
+  <video
+    class="pointer-events-none absolute inset-0 h-full w-full object-cover"
+    autoplay
+    muted
+    loop
+    playsinline
+    preload="metadata"
+    aria-hidden="true"
+  >
+    <source src="/videos/hero-home.mp4" type="video/mp4" />
+  </video>
+  <!-- Blend the video into the dark page: mute + ramp to black toward bottom -->
+  <div class="pointer-events-none absolute inset-0 bg-gradient-to-b from-bg/30 via-bg/45 to-bg"></div>
+  <div class="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-bg/80 to-transparent"></div>
+
+  <div class="container-page relative flex min-h-[100svh] flex-col items-center justify-center pt-28 pb-20 text-center">
+    <div class="flex w-full max-w-4xl flex-col items-center">
+      <h1
+        class="reveal text-shadow-hero text-[2.9rem] font-medium leading-[1.02] tracking-tight sm:text-6xl lg:text-7xl"
+        data-delay="60"
+      >
+        {t("home.hero.line1")}<br />
+        <Fragment set:html={t("home.hero.line2")} />
+      </h1>
+
+      <p
+        class="reveal text-shadow-hero mt-7 max-w-xl text-lg leading-relaxed text-fg/90 md:text-xl"
+        data-delay="120"
+      >
+        {t("home.hero.subtitle")}
+      </p>
+
+      <div class="reveal mt-9" data-delay="180">
+        <Button href={localizeHref("/contact/", lang)} size="lg" arrow>{t("cta.startProject")}</Button>
+      </div>
+
+      <!-- Client logo marquee, just under the CTA -->
+      <div class="reveal mt-14 w-full" data-delay="240">
+        <div class="marquee-mask flex overflow-hidden">
+          <div class="marquee flex shrink-0 items-center gap-14 pr-14">
+            {
+              [...localizedClients, ...localizedClients].map((c) => (
+                <span
+                  class="text-shadow-hero whitespace-nowrap text-xl font-semibold text-fg-muted"
+                  style="font-family: var(--font-display)"
+                >
+                  {c}
+                </span>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Services -->
+<section class="relative overflow-hidden">
+  <div class="container-page relative py-24 md:py-32">
+    <SectionHeader
+      title={t("home.services.title")}
+      description={t("home.services.description")}
+    />
+    <div class="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      {localizedServices.map((s, i) => <ServiceCard service={s} index={i} />)}
+    </div>
+  </div>
+</section>
+
+<!-- Stats -->
+<section class="container-page pb-8">
+  <div class="hairline mb-16"></div>
+  <div class="grid grid-cols-2 gap-8 lg:grid-cols-4">
+    {
+      localizedStats.map((s, i) => (
+        <div class="reveal flex flex-col gap-2 text-center" data-delay={i * 70}>
+          <span
+            class="text-4xl font-medium sm:text-5xl"
+            style="font-family: var(--font-display)"
+          >
+            <span class="accent-italic" data-count={s.value}>{s.value}</span>
+          </span>
+          <span class="text-sm text-fg-muted">{s.label}</span>
+        </div>
+      ))
+    }
+  </div>
+  <div class="hairline mt-16"></div>
+</section>
+
+<!-- Engineers -->
+<section
+  id="engineers-preview"
+  class="relative scroll-mt-24 overflow-hidden border-t border-border"
+>
+  <div
+    class="pointer-events-none absolute inset-0 bg-cover bg-left"
+    style="background-image: url(/bg/bg-01.jpg); filter: brightness(0.5) saturate(1.05);"
+  >
+  </div>
+  <div class="container-page relative py-24 md:py-32">
+    <div class="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+      <SectionHeader
+        title={t("home.engineers.title")}
+        description={t("home.engineers.description")}
+      />
+      <div class="reveal shrink-0">
+        <Button href={localizeHref("/engineers/", lang)} variant="secondary" arrow>
+          {t("home.engineers.cta")}
+        </Button>
+      </div>
+    </div>
+    <div class="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        previewEngineers.map((eng, i) => (
+          <article
+            class="card reveal flex flex-col gap-5 p-7"
+            data-delay={i * 80}
+          >
+            <div class="flex items-center gap-4">
+              {eng.photo ? (
+                <img
+                  src={eng.photo}
+                  alt={eng.name}
+                  width="56"
+                  height="56"
+                  loading="lazy"
+                  decoding="async"
+                  class="h-14 w-14 shrink-0 rounded-2xl object-cover"
+                />
+              ) : (
+                <div
+                  class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-border-soft bg-accent-soft text-lg font-semibold text-accent-hover"
+                  style="font-family: var(--font-display)"
+                  aria-hidden="true"
+                >
+                  {eng.initials}
+                </div>
+              )}
+              <div class="flex flex-col">
+                <h3 class="text-lg font-semibold leading-tight">{eng.name}</h3>
+                <p class="text-sm font-medium text-accent-hover">{eng.role}</p>
+              </div>
+            </div>
+            <p class="text-[0.95rem] leading-relaxed text-fg-muted">{eng.bio}</p>
+            <div class="mt-auto flex flex-wrap gap-2">
+              {eng.background.map((company) => (
+                <span class="inline-flex items-center gap-1.5 rounded-full bg-accent-soft px-3 py-1 text-xs font-semibold text-accent-hover">
+                  <Icon name="spark" size={13} />
+                  {t("home.engineers.exPrefix")}{company}
+                </span>
+              ))}
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>
+<CtaBand />
+
+<script>
+  // Count-up animation for the stats (runs once when scrolled into view).
+  const els = document.querySelectorAll<HTMLElement>("[data-count]");
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  const run = (el: HTMLElement) => {
+    const raw = el.dataset.count ?? el.textContent ?? "";
+    const num = parseFloat(raw.replace(/[^0-9.]/g, ""));
+    if (!isFinite(num)) return;
+    const suffix = raw.replace(/[0-9.,]/g, ""); // e.g. "+", "%"
+    const dur = 1400;
+    const start = performance.now();
+    const tick = (now: number) => {
+      const t = Math.min((now - start) / dur, 1);
+      const eased = 1 - Math.pow(1 - t, 3); // easeOutCubic
+      el.textContent = Math.round(num * eased) + suffix;
+      if (t < 1) requestAnimationFrame(tick);
+      else el.textContent = raw;
+    };
+    requestAnimationFrame(tick);
+  };
+
+  if (reduce || !("IntersectionObserver" in window)) {
+    // leave final values as-is
+  } else {
+    els.forEach((el) => (el.textContent = "0" + (el.dataset.count ?? "").replace(/[0-9.,]/g, "")));
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            run(entry.target as HTMLElement);
+            io.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.4 }
+    );
+    els.forEach((el) => io.observe(el));
+  }
+</script>

@@ -6,9 +6,6 @@
 export const site = {
   name: "ZeeSpires",
   legalName: "ZeeSpires US LLC",
-  tagline: "Software built to reach higher.",
-  shortDescription:
-    "ZeeSpires is a senior-led software team delivering AI agents, data platforms, full-stack products, and IT consulting for ambitious B2B companies.",
   url: "https://zeespires.com",
   locale: "en_US",
   themeColor: "#07070b",
@@ -36,21 +33,25 @@ export const site = {
   },
 } as const;
 
-export type NavChild = { label: string; href: string };
-export type NavItem = { label: string; href: string; children?: NavChild[] };
+import type { UiKey } from "@/i18n/ui";
+
+// Labels are translation keys (see src/i18n/ui.ts) rather than literal
+// strings, since nav is rendered by Header/Footer in both locales.
+export type NavChild = { labelKey: UiKey; href: string };
+export type NavItem = { labelKey: UiKey; href: string; children?: NavChild[] };
 
 export const nav: NavItem[] = [
   {
-    label: "Services",
+    labelKey: "nav.services",
     href: "/services/",
     children: [
-      { label: "Overview", href: "/services/" },
-      { label: "AI Agent Development", href: "/services/ai-agent-development/" },
-      { label: "Data Engineering", href: "/services/data-engineering/" },
-      { label: "Full-Stack Development", href: "/services/full-stack-development/" },
-      { label: "IT Consulting & Staffing", href: "/services/it-consulting-staffing/" },
+      { labelKey: "nav.servicesOverview", href: "/services/" },
+      { labelKey: "nav.serviceAi", href: "/services/ai-agent-development/" },
+      { labelKey: "nav.serviceData", href: "/services/data-engineering/" },
+      { labelKey: "nav.serviceFullstack", href: "/services/full-stack-development/" },
+      { labelKey: "nav.serviceConsulting", href: "/services/it-consulting-staffing/" },
     ],
   },
-  { label: "Engineers", href: "/engineers/" },
-  { label: "Contact", href: "/contact/" },
+  { labelKey: "nav.engineers", href: "/engineers/" },
+  { labelKey: "nav.contact", href: "/contact/" },
 ];

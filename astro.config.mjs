@@ -10,11 +10,19 @@ const SITE = "https://zeespires.com";
 export default defineConfig({
   site: SITE,
   output: "static",
+  i18n: {
+    defaultLocale: "en",
+    locales: ["en", "ja"],
+    routing: {
+      // English stays unprefixed at the root; Japanese lives under /ja/.
+      prefixDefaultLocale: false,
+    },
+  },
   integrations: [sitemap()],
+  server: {
+    host: true,
+  },
   vite: {
-    // Type mismatch between @tailwindcss/vite's Vite and Astro's bundled Vite
-    // is cosmetic — the plugin runs correctly at build time.
-    // @ts-expect-error - Vite version type mismatch
     plugins: [tailwindcss()],
   },
   build: {

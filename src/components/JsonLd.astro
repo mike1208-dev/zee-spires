@@ -1,11 +1,19 @@
 ---
 import { site } from "@/data/site";
 import { services } from "@/data/services";
+import { ogLocales } from "@/i18n/config";
+import { resolveLocale, useTranslations, localizeHref } from "@/i18n/utils";
+import { localizeService } from "@/i18n/translations";
 
 /**
  * Organization + ProfessionalService structured data. Rendered site-wide so
  * search engines and social platforms understand the company correctly.
  */
+const lang = resolveLocale(Astro.currentLocale);
+const t = useTranslations(lang);
+const description = t("meta.description");
+const inLanguage = ogLocales[lang].replace("_", "-");
+
 const graph = {
   "@context": "https://schema.org",
   "@graph": [
@@ -15,7 +23,7 @@ const graph = {
       name: site.legalName,
       alternateName: site.name,
       url: site.url,
-      description: site.shortDescription,
+      description,
       email: site.contact.email,
       telephone: site.contact.phone,
       logo: `${site.url}/favicon.svg`,
@@ -35,7 +43,7 @@ const graph = {
       name: site.legalName,
       image: `${site.url}/og-image.svg`,
       url: site.url,
-      description: site.shortDescription,
+      description,
       priceRange: "$$$",
       telephone: site.contact.phone,
       email: site.contact.email,
@@ -51,15 +59,18 @@ const graph = {
       hasOfferCatalog: {
         "@type": "OfferCatalog",
         name: "Services",
-        itemListElement: services.map((s) => ({
-          "@type": "Offer",
-          itemOffered: {
-            "@type": "Service",
-            name: s.title,
-            description: s.summary,
-            url: `${site.url}/services/${s.slug}/`,
-          },
-        })),
+        itemListElement: services.map((svc) => {
+          const s = localizeService(svc, lang);
+          return {
+            "@type": "Offer",
+            itemOffered: {
+              "@type": "Service",
+              name: s.title,
+              description: s.summary,
+              url: `${site.url}${localizeHref(`/services/${s.slug}/`, lang)}`,
+            },
+          };
+        }),
       },
     },
     {
@@ -68,7 +79,7 @@ const graph = {
       url: site.url,
       name: site.name,
       publisher: { "@id": `${site.url}/#organization` },
-      inLanguage: "en-US",
+      inLanguage,
     },
   ],
 };

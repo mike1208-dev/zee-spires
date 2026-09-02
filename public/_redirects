@@ -1,0 +1,6 @@
+# Cloudflare Pages auto-detects a root-level 404.html for unmatched paths,
+# but that only covers English routes. src/pages/ja/404.astro builds as
+# /ja/404/index.html (Astro only special-cases the root 404.astro to emit a
+# flat file), so without this rule an unmatched /ja/* path would silently
+# fall back to the English 404 page instead of the Japanese one.
+/ja/*  /ja/404/  404
