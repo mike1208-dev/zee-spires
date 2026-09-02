@@ -150,6 +150,17 @@
     text-wrap: pretty;
   }
 
+  /* Native <select> dropdown list. The open popup is OS/browser-rendered
+     chrome — color-scheme (set above) gets Chromium/Firefox most of the way
+     to a dark list, but its default is a generic system gray with a system-
+     blue highlight, not our actual palette. Option colors nudge it toward
+     --surface/--fg instead (Safari's native list mostly ignores this, so it
+     stays generic there — an acceptable, common tradeoff for a native select). */
+  select option {
+    background-color: var(--surface);
+    color: var(--fg);
+  }
+
   /* Japanese pages (<html lang="ja">): swap in a CJK-capable font and drop
      the negative letter-spacing / italic emphasis tuned for Latin glyphs. */
   :lang(ja) {
