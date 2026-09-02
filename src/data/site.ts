@@ -6,9 +6,6 @@
 export const site = {
   name: "ZeeSpires",
   legalName: "ZeeSpires US LLC",
-  tagline: "Software built to reach higher.",
-  shortDescription:
-    "ZeeSpires is a senior-led software team delivering AI agents, data platforms, full-stack products, and IT consulting for ambitious B2B companies.",
   url: "https://zeespires.com",
   locale: "en_US",
   themeColor: "#07070b",

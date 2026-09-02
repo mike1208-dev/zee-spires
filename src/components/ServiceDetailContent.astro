@@ -13,15 +13,15 @@ import { resolveLocale, useTranslations, localizeHref } from "@/i18n/utils";
 import { localizeService } from "@/i18n/translations";
 
 interface Props {
+  /** Already localized by the caller (the caller needs it localized too, for Layout's meta). */
   service: Service;
 }
-const { service } = Astro.props;
+const { service: s } = Astro.props;
 
 const lang = resolveLocale(Astro.currentLocale);
 const t = useTranslations(lang);
-const s = localizeService(service, lang);
 const others = services
-  .filter((x) => x.slug !== service.slug)
+  .filter((x) => x.slug !== s.slug)
   .map((x) => localizeService(x, lang));
 
 // Background hero video per service.
@@ -31,10 +31,13 @@ const videos: Record<string, string> = {
   "full-stack-development": "/videos/svc-fullstack.mp4",
   "it-consulting-staffing": "/videos/svc-consulting.mp4",
 };
-const heroVideo = videos[service.slug];
+const heroVideo = videos[s.slug];
 
-const discussLabel =
-  lang === "en" ? `Discuss a ${s.title.toLowerCase()} project` : `${s.title}について相談する`;
+// The lowercasing is an English mid-sentence casing convention, not
+// translated content — the actual copy comes from ui.ts like everything else.
+const discussLabel = `${t("serviceDetail.discussPrefix")}${
+  lang === "en" ? s.title.toLowerCase() : s.title
+}${t("serviceDetail.discussSuffix")}`;
 ---
 
 <PageHero title={s.title} description={s.tagline} video={heroVideo} startCta />

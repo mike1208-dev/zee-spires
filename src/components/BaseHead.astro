@@ -35,7 +35,7 @@ const {
 
 const canonical = new URL(Astro.url.pathname, site.url).href;
 const ogImage = new URL(image, site.url).href;
-const tagline = lang === defaultLocale ? site.tagline : t("meta.tagline");
+const tagline = t("meta.tagline");
 const fullTitle =
   title === site.name ? `${site.name} — ${tagline}` : `${title} · ${site.name}`;
 

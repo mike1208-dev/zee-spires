@@ -18,9 +18,10 @@ const t = useTranslations(lang);
 // Nav hrefs are canonical English paths; rewrite to this locale's equivalent
 // (falls through unchanged for routes with no translation yet).
 const href = (h: string) => localizeHref(h, lang);
+const homeHref = href("/");
 const isActive = (h: string) => {
   const target = href(h);
-  return target === "/" || target === "/ja/" ? path === target : path.startsWith(target);
+  return target === homeHref ? path === target : path.startsWith(target);
 };
 ---
 

@@ -224,6 +224,7 @@ const labelCls = "text-sm font-semibold text-fg";
 <script
   is:inline
   define:vars={{
+    LANG: lang,
     MSG_SENDING: t("contactPage.form.sendingLabel"),
     MSG_SUBMIT: t("contactPage.form.submitLabel"),
     MSG_SUCCESS: t("contactPage.form.successMessage"),
@@ -264,14 +265,23 @@ const labelCls = "text-sm font-semibold text-fg";
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
-      // The API's error text is English-only; show a localized generic
-      // message instead of relaying it verbatim on non-English pages.
       if (res.ok) {
         form.reset();
         show(MSG_SUCCESS, true);
         if (label) label.textContent = MSG_SENT;
       } else {
-        show(MSG_GENERIC_ERROR, false);
+        // The API's error text is English-only. Show it as-is on the English
+        // page (where it's already correct), but fall back to a localized
+        // generic message on non-English pages rather than leaking untranslated
+        // English text.
+        let msg = MSG_GENERIC_ERROR;
+        if (LANG === "en") {
+          const body = await res.json().catch(() => ({}));
+          if (body && typeof body.error === "string" && body.error) {
+            msg = body.error;
+          }
+        }
+        show(msg, false);
         if (submitBtn) submitBtn.disabled = false;
         if (label) label.textContent = MSG_SUBMIT;
       }

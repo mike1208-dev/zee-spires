@@ -74,6 +74,8 @@ export const ui = {
     "serviceDetail.whatYouGet": "What you get",
     "serviceDetail.exploreOthers": "Explore other services",
     "serviceDetail.allServices": "All services",
+    "serviceDetail.discussPrefix": "Discuss a ",
+    "serviceDetail.discussSuffix": " project",
 
     "engineersPage.title": "Engineers",
     "engineersPage.metaDescription":
@@ -212,6 +214,8 @@ export const ui = {
     "serviceDetail.whatYouGet": "提供内容",
     "serviceDetail.exploreOthers": "他のサービスを見る",
     "serviceDetail.allServices": "すべてのサービスを見る",
+    "serviceDetail.discussPrefix": "",
+    "serviceDetail.discussSuffix": "について相談する",
 
     "engineersPage.title": "エンジニア紹介",
     "engineersPage.metaDescription":
