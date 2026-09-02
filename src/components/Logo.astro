@@ -4,15 +4,20 @@
  * active page theme: the white wordmark on dark pages, the dark wordmark on
  * light (service) pages.
  */
+import { getAlternateUrl, resolveLocale } from "@/i18n/utils";
+
 interface Props {
   class?: string;
   height?: number;
 }
 const { class: className = "", height = 30 } = Astro.props;
+
+const lang = resolveLocale(Astro.currentLocale);
+const home = getAlternateUrl(Astro.url.pathname, lang);
 ---
 
 <a
-  href="/"
+  href={home}
   class={`inline-flex items-center ${className}`}
   aria-label="ZeeSpires — home"
 >

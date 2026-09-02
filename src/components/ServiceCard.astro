@@ -1,6 +1,7 @@
 ---
 import type { Service } from "@/data/services";
 import Icon from "./Icon.astro";
+import { resolveLocale, useTranslations } from "@/i18n/utils";
 
 interface Props {
   service: Service;
@@ -9,6 +10,7 @@ interface Props {
 const { service, index = 0 } = Astro.props;
 const num = String(index + 1).padStart(2, "0");
 const url = `/services/${service.slug}/`;
+const t = useTranslations(resolveLocale(Astro.currentLocale));
 ---
 
 <a
@@ -34,7 +36,7 @@ const url = `/services/${service.slug}/`;
   <span
     class="mt-auto inline-flex items-center gap-1.5 pt-3 text-sm font-semibold text-fg transition-colors group-hover:text-accent-hover"
   >
-    Learn more
+    {t("service.learnMore")}
     <Icon
       name="arrow"
       size={16}

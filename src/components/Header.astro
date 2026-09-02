@@ -3,10 +3,16 @@ import { nav } from "@/data/site";
 import Logo from "./Logo.astro";
 import Button from "./Button.astro";
 import Icon from "./Icon.astro";
+import { locales, localeNames } from "@/i18n/config";
+import { resolveLocale, useTranslations, getAlternateUrl } from "@/i18n/utils";
 
 const path = Astro.url.pathname;
 const isActive = (href: string) =>
   href === "/" ? path === "/" : path.startsWith(href);
+
+const lang = resolveLocale(Astro.currentLocale);
+const t = useTranslations(lang);
+const otherLocales = locales.filter((l) => l !== lang);
 ---
 
 <header
@@ -18,7 +24,7 @@ const isActive = (href: string) =>
       <Logo height={56} />
 
       <!-- Desktop nav (flat) -->
-      <nav class="hidden items-center gap-1 lg:flex" aria-label="Primary">
+      <nav class="hidden items-center gap-1 lg:flex" aria-label={t("nav.ariaPrimary")}>
         {
           nav.map((item) =>
             item.children ? (
@@ -33,7 +39,7 @@ const isActive = (href: string) =>
                       : "text-fg group-hover:text-accent-hover",
                   ]}
                 >
-                  {item.label}
+                  {t(item.labelKey)}
                   <Icon
                     name="chevron"
                     size={15}
@@ -54,7 +60,7 @@ const isActive = (href: string) =>
                         }
                         class="block rounded-lg px-3 py-2.5 text-sm font-medium text-fg-muted transition-colors hover:bg-accent-soft hover:text-accent-hover"
                       >
-                        {c.label}
+                        {t(c.labelKey)}
                       </a>
                     ))}
                   </div>
@@ -71,7 +77,7 @@ const isActive = (href: string) =>
                     : "text-fg hover:text-accent-hover",
                 ]}
               >
-                {item.label}
+                {t(item.labelKey)}
               </a>
             )
           )
@@ -79,14 +85,27 @@ const isActive = (href: string) =>
       </nav>
 
       <div class="flex items-center gap-3">
+        <!-- Language switcher -->
+        <div class="hidden items-center gap-1 sm:flex" aria-label={t("lang.switchAria")}>
+          {
+            otherLocales.map((l) => (
+              <a
+                href={getAlternateUrl(path, l)}
+                class="rounded-full px-2.5 py-1.5 text-sm font-medium text-fg-muted transition-colors hover:text-accent-hover"
+              >
+                {localeNames[l]}
+              </a>
+            ))
+          }
+        </div>
         <div class="hidden sm:block">
-          <Button href="/contact/" size="md" arrow>Start a project</Button>
+          <Button href="/contact/" size="md" arrow>{t("cta.startProject")}</Button>
         </div>
         <button
           id="menu-open"
           type="button"
           class="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-border text-fg lg:hidden"
-          aria-label="Open menu"
+          aria-label={t("nav.openMenu")}
           aria-expanded="false"
           aria-controls="mobile-menu"
         >
@@ -108,18 +127,18 @@ const isActive = (href: string) =>
           id="menu-close"
           type="button"
           class="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-border text-fg"
-          aria-label="Close menu"
+          aria-label={t("nav.closeMenu")}
         >
           <Icon name="close" size={20} />
         </button>
       </div>
-      <nav class="mt-6 flex flex-col gap-1 pb-10" aria-label="Mobile">
+      <nav class="mt-6 flex flex-col gap-1 pb-10" aria-label={t("nav.ariaMobile")}>
         {
           nav.map((item) =>
             item.children ? (
               <Fragment>
                 <p class="px-4 pb-1 pt-3 text-xs font-semibold uppercase tracking-widest text-fg-subtle">
-                  {item.label}
+                  {t(item.labelKey)}
                 </p>
                 <div class="ml-3 flex flex-col gap-0.5 border-l border-border pl-4">
                   {item.children.map((c) => (
@@ -127,7 +146,7 @@ const isActive = (href: string) =>
                       href={c.href}
                       class="rounded-lg px-3 py-2.5 text-base text-fg-muted transition-colors hover:text-accent-hover"
                     >
-                      {c.label}
+                      {t(c.labelKey)}
                     </a>
                   ))}
                 </div>
@@ -142,14 +161,26 @@ const isActive = (href: string) =>
                     : "text-fg hover:bg-surface",
                 ]}
               >
-                {item.label}
+                {t(item.labelKey)}
               </a>
             )
           )
         }
+        <div class="mt-3 flex items-center gap-1" aria-label={t("lang.switchAria")}>
+          {
+            otherLocales.map((l) => (
+              <a
+                href={getAlternateUrl(path, l)}
+                class="rounded-full px-4 py-2 text-base font-medium text-fg-muted transition-colors hover:text-accent-hover"
+              >
+                {localeNames[l]}
+              </a>
+            ))
+          }
+        </div>
         <div class="mt-4">
           <Button href="/contact/" size="lg" arrow class="w-full">
-            Start a project
+            {t("cta.startProject")}
           </Button>
         </div>
       </nav>
