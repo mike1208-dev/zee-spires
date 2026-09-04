@@ -195,7 +195,7 @@ export const ui = {
     "home.engineers.description":
       "Microsoft や IBM などでの経験を持つメンバーが、あなたと直接一緒に働きます。",
     "home.engineers.cta": "エンジニア紹介を見る",
-    "home.engineers.exPrefix": "元",
+    "home.engineers.exPrefix": "元 ",
 
     "ctaBand.title":
       '<span class="accent-italic">もっと高み</span>へ、一緒に創りましょう。',
