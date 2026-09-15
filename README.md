@@ -3,7 +3,7 @@
 A fast, refined, static corporate website for **ZeeSpires US LLC**, built with
 [Astro](https://astro.build), TypeScript, and Tailwind CSS, and deployed to
 [Cloudflare Pages](https://pages.cloudflare.com). Available in **English**
-(default, unprefixed) and **Japanese** (`/ja/`).
+(default, unprefixed) and **Japanese** (`/jp/`).
 
 It presents the four core services — **AI Agent Development, Data Engineering,
 Full-Stack Development, and IT Consulting & IT Staffing** — foregrounds the
@@ -18,7 +18,7 @@ senior engineering team, and drives B2B inquiries.
 | Framework     | Astro 7 (static site generation)                       |
 | Language      | TypeScript                                             |
 | Styling       | Tailwind CSS 4 (`@tailwindcss/vite`)                   |
-| i18n          | Astro's built-in i18n routing — English at `/`, Japanese at `/ja/` |
+| i18n          | Astro's built-in i18n routing — English at `/`, Japanese at `/jp/` (coded `ja`) |
 | Fonts         | Inter (body), Space Grotesk (display), Noto Sans JP (Japanese text) — self-hosted via Fontsource |
 | SEO           | JSON-LD (Organization / ProfessionalService), OGP, hreflang, sitemap |
 | Forms         | Cloudflare Pages Function → Resend                     |
@@ -58,7 +58,7 @@ npm run dev        # http://localhost:4321
 │   └── api/contact.ts       # Pages Function: POST /api/contact (sends email)
 ├── public/
 │   ├── _headers             # Cloudflare Pages security/caching headers
-│   └── _redirects           # Serves the Japanese 404 for unmatched /ja/* paths
+│   └── _redirects           # Serves the Japanese 404 for unmatched /jp/* paths
 ├── src/
 │   ├── components/          # Header, Footer, Button, cards, SEO head…
 │   │   └── *Content.astro   # Page bodies shared between the en and ja routes
@@ -66,7 +66,7 @@ npm run dev        # http://localhost:4321
 │   ├── i18n/                 # Translation dictionary, locale config, helpers
 │   ├── layouts/Layout.astro
 │   ├── pages/                # index, services, engineers, contact, 404
-│   │   └── ja/                # Same routes, Japanese — thin wrappers around *Content.astro
+│   │   └── jp/                # Same routes, Japanese — thin wrappers around *Content.astro
 │   └── styles/global.css     # Tailwind + design tokens (dark, + light for service pages)
 ├── astro.config.mjs
 └── wrangler.toml
@@ -98,11 +98,11 @@ than duplicated into every field:
 
 **Editing English copy** in `src/data/*.ts` does not touch the Japanese
 site — update the matching entry in `src/i18n/translations.ts` too (keyed by
-the same slug/name), or the `/ja/` page will keep showing the old text.
+the same slug/name), or the `/jp/` page will keep showing the old text.
 
 **Adding a new page in both locales**: build the page body as a shared
 `src/components/<Name>Content.astro` (driven by `Astro.currentLocale`), add
-a thin wrapper page under both `src/pages/` and `src/pages/ja/`, and add its
+a thin wrapper page under both `src/pages/` and `src/pages/jp/`, and add its
 path to `translatedRoutes` in `src/i18n/utils.ts` so the language switcher
 and hreflang tags pick it up.
 

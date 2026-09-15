@@ -1,4 +1,4 @@
-import { defaultLocale, locales, type Locale } from "./config";
+import { defaultLocale, locales, localePaths, type Locale } from "./config";
 import { ui, type UiKey } from "./ui";
 
 /** Narrows `Astro.currentLocale` (a plain `string | undefined`) to a known `Locale`. */
@@ -24,26 +24,26 @@ export function useTranslations(locale: Locale) {
  * data / components to the current locale.
  */
 export const translatedRoutes: Record<string, Record<Locale, string>> = {
-  "/": { en: "/", ja: "/ja/" },
-  "/services/": { en: "/services/", ja: "/ja/services/" },
+  "/": { en: "/", ja: "/jp/" },
+  "/services/": { en: "/services/", ja: "/jp/services/" },
   "/services/ai-agent-development/": {
     en: "/services/ai-agent-development/",
-    ja: "/ja/services/ai-agent-development/",
+    ja: "/jp/services/ai-agent-development/",
   },
   "/services/data-engineering/": {
     en: "/services/data-engineering/",
-    ja: "/ja/services/data-engineering/",
+    ja: "/jp/services/data-engineering/",
   },
   "/services/full-stack-development/": {
     en: "/services/full-stack-development/",
-    ja: "/ja/services/full-stack-development/",
+    ja: "/jp/services/full-stack-development/",
   },
   "/services/it-consulting-staffing/": {
     en: "/services/it-consulting-staffing/",
-    ja: "/ja/services/it-consulting-staffing/",
+    ja: "/jp/services/it-consulting-staffing/",
   },
-  "/engineers/": { en: "/engineers/", ja: "/ja/engineers/" },
-  "/contact/": { en: "/contact/", ja: "/ja/contact/" },
+  "/engineers/": { en: "/engineers/", ja: "/jp/engineers/" },
+  "/contact/": { en: "/contact/", ja: "/jp/contact/" },
 };
 
 /**
@@ -56,13 +56,21 @@ export function localizeHref(href: string, lang: Locale): string {
   return translatedRoutes[href]?.[lang] ?? href;
 }
 
-/** Strips a known locale prefix off a pathname, returning the bare (English) path. */
+/**
+ * Strips a known locale prefix off a pathname, returning the bare (English)
+ * path. Matches against `localePaths` (the URL segment) rather than the
+ * `Locale` code directly, since they can differ — e.g. Japanese is coded
+ * "ja" but lives under the "/jp/" URL prefix.
+ */
 export function stripLocale(pathname: string): { locale: Locale; path: string } {
   const segments = pathname.split("/");
-  const maybeLocale = segments[1];
-  if (locales.includes(maybeLocale as Locale) && maybeLocale !== defaultLocale) {
+  const maybeSegment = segments[1];
+  const match = (Object.entries(localePaths) as [Locale, string][]).find(
+    ([loc, urlPath]) => loc !== defaultLocale && urlPath !== "" && urlPath === maybeSegment
+  );
+  if (match) {
     const rest = "/" + segments.slice(2).join("/");
-    return { locale: maybeLocale as Locale, path: rest === "//" ? "/" : rest };
+    return { locale: match[0], path: rest === "//" ? "/" : rest };
   }
   return { locale: defaultLocale, path: pathname };
 }
