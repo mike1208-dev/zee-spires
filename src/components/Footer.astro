@@ -1,5 +1,5 @@
 ---
-import { site, nav } from "@/data/site";
+import { site, nav, formattedAddress } from "@/data/site";
 import { services } from "@/data/services";
 import Logo from "./Logo.astro";
 import Icon from "./Icon.astro";
@@ -114,11 +114,7 @@ const localizedServices = services.map((s) => localizeService(s, lang));
           </li>
           <li class="flex items-start gap-2.5 text-sm text-fg-muted">
             <Icon name="pin" size={17} class="mt-0.5 shrink-0 text-accent" />
-            <span>
-              {site.address.street}<br />
-              {site.address.city}, {site.address.region}
-              {site.address.postalCode}, {site.address.country}
-            </span>
+            <span>{formattedAddress.full}</span>
           </li>
         </ul>
       </div>
@@ -131,7 +127,7 @@ const localizedServices = services.map((s) => localizeService(s, lang));
         © {year} {site.legalName}. {t("footer.tagline")}
       </p>
       <p class="text-sm text-fg-subtle">
-        {site.address.city}, {site.address.region} · {site.address.country}
+        {formattedAddress.short}
       </p>
     </div>
   </div>

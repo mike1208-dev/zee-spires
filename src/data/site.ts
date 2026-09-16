@@ -5,25 +5,26 @@
 
 export const site = {
   name: "ZeeSpires",
-  legalName: "ZeeSpires US LLC",
+  legalName: "ZeeSpires LLC",
   url: "https://zeespires.com",
   locale: "en_US",
   themeColor: "#07070b",
 
   contact: {
     email: "admin@zeespires.com",
-    phone: "+94 78 843 0853",
+    phone: "+65 9743 5146",
     // Placeholder booking link — swap for the real Calendly/Cal.com URL.
     bookingUrl: "https://cal.com/zeespires",
   },
 
   address: {
-    street: "1021 E Lincolnway, Unit #1933",
-    city: "Cheyenne",
-    region: "WY",
-    postalCode: "82001",
-    country: "USA",
-    countryCode: "US",
+    street: "448A Sengkang West Way, #23-303",
+    city: "Singapore",
+    // Singapore has no state/region tier.
+    region: "",
+    postalCode: "791448",
+    country: "Singapore",
+    countryCode: "SG",
   },
 
   social: {
@@ -32,6 +33,20 @@ export const site = {
     x: "https://x.com/zeespires",
   },
 } as const;
+
+const isCityState = site.address.city === site.address.country;
+const cityRegionPostal =
+  [site.address.city, site.address.region].filter(Boolean).join(", ") +
+  (site.address.postalCode ? ` ${site.address.postalCode}` : "");
+
+export const formattedAddress = {
+  /** e.g. "448A Sengkang West Way, #23-303, Singapore 791448" */
+  full: `${site.address.street}, ${cityRegionPostal}${isCityState ? "" : `, ${site.address.country}`}`,
+  /** e.g. "Singapore" or "Cheyenne, WY · USA" */
+  short: isCityState
+    ? site.address.city
+    : `${[site.address.city, site.address.region].filter(Boolean).join(", ")} · ${site.address.country}`,
+};
 
 import type { UiKey } from "@/i18n/ui";
 
