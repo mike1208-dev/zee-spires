@@ -1,29 +1,19 @@
 /**
- * Cloudflare Pages middleware — runs on every request before static assets
- * are served.
+ * Cloudflare Pages middleware — runs before every request.
  *
- * Sends visitors to the Japanese site (/jp/...) when they land on the bare
- * English root ("/") from a Japan-geolocated connection (Cloudflare's edge
- * `request.cf.country`). No cookie, localStorage, or any other stored
- * state is involved — every other path, including /jp/ itself, already
- * declares its own locale via the URL and is never second-guessed here.
+ * Redirects to /jp/... when a visitor lands on the bare English root ("/")
+ * from a Japan-geolocated connection (`request.cf.country`). No cookie or
+ * stored state — every other path, including /jp/ itself, already
+ * declares its own locale via the URL and is left alone.
  *
- * The one wrinkle: the header's EN switcher on the Japanese *home* page
- * links to "/" — exactly the one path this redirect watches. Without a
- * way to tell "an explicit switcher click landed on /" apart from "a fresh,
- * ambiguous arrival at /", a Japan-geolocated visitor could never reach the
- * English homepage at all — clicking EN would just bounce straight back to
- * /jp/. The switcher link carries a one-shot `fromSwitch` query param for
- * exactly this case: present only for that single request (never stored,
- * never sent again on the next navigation), it skips the geo-check once.
+ * The header's EN switcher on the Japanese homepage links to "/", the one
+ * path this redirect watches, so its links carry a one-shot `fromSwitch`
+ * query param that skips the geo-check for that single request.
  *
- * Also serves the Japanese 404 page (with an actual 404 status) for
- * unmatched /jp/* paths. This used to be a public/_redirects rule
- * (`/jp/* /jp/404/ 404`), but Cloudflare Pages' _redirects only accepts
- * 200/301/302/303/307/308 as rewrite status codes — 404 is invalid and
- * wrangler flags it at build time (`Found 1 invalid redirect rule`), so
- * that rule was silently never doing anything. Rewriting via the ASSETS
- * binding here actually works, since a Function can return any status.
+ * Also serves the Japanese 404 page (with a real 404 status) for unmatched
+ * /jp/* paths, via the ASSETS binding — Cloudflare Pages' _redirects only
+ * accepts 200/301/302/303/307/308 as rewrite status codes, so a 404 rule
+ * isn't possible there.
  */
 
 interface Env {
