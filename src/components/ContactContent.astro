@@ -6,7 +6,7 @@
 import Button from "@/components/Button.astro";
 import Icon from "@/components/Icon.astro";
 import SectionHeader from "@/components/SectionHeader.astro";
-import { site } from "@/data/site";
+import { site, formattedAddress } from "@/data/site";
 import { services } from "@/data/services";
 import { outcomes, clients, testimonials } from "@/data/content";
 import { resolveLocale, useTranslations } from "@/i18n/utils";
@@ -60,7 +60,7 @@ const labelCls = "text-sm font-semibold text-fg";
           </li>
           <li class="flex items-start gap-3 text-sm text-fg-muted">
             <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent-soft text-accent-hover"><Icon name="pin" size={18} /></span>
-            <span><span class="block font-semibold text-fg">{t("contactPage.officeLabel")}</span>{site.address.street}, {site.address.city}, {site.address.region} {site.address.postalCode}, {site.address.country}</span>
+            <span><span class="block font-semibold text-fg">{t("contactPage.officeLabel")}</span>{formattedAddress.full}</span>
           </li>
         </ul>
       </div>
