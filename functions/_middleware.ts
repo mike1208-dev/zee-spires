@@ -1,3 +1,31 @@
+/**
+ * Cloudflare Pages middleware — runs on every request before static assets
+ * are served.
+ *
+ * Defaults visitors to the Japanese site (/jp/...) when Cloudflare's edge
+ * geolocation (`request.cf.country`) resolves to Japan, and to English
+ * otherwise, then remembers the decision in a `pref_locale` cookie
+ * ("en" | "jp", matching the URL prefix) and actively enforces it for the
+ * rest of the browsing session — landing on a URL that doesn't match the
+ * stored preference redirects to the equivalent page in the preferred
+ * locale. The cookie is session-only (no Max-Age): closing the browser
+ * clears it, so a genuinely new session re-checks IP geolocation rather
+ * than replaying a decision from days or months ago.
+ *
+ * The one exception is an *explicit* click on the header's EN/日本語
+ * switcher, marked with the `setLocale` query param: that always wins,
+ * updates the cookie to the newly-chosen locale, and is never immediately
+ * redirected back by the enforcement above.
+ *
+ * Also serves the Japanese 404 page (with an actual 404 status) for
+ * unmatched /jp/* paths. This used to be a public/_redirects rule
+ * (`/jp/* /jp/404/ 404`), but Cloudflare Pages' _redirects only accepts
+ * 200/301/302/303/307/308 as rewrite status codes — 404 is invalid and
+ * wrangler flags it at build time (`Found 1 invalid redirect rule`), so
+ * that rule was silently never doing anything. Rewriting via the ASSETS
+ * binding here actually works, since a Function can return any status.
+ */
+
 interface Env {
   ASSETS: Fetcher;
 }
@@ -5,7 +33,6 @@ interface Env {
 type LocaleCookie = "en" | "jp";
 
 const COOKIE_NAME = "pref_locale";
-const COOKIE_MAX_AGE = 60 * 60 * 24 * 365; // 1 year
 const SWITCH_PARAM = "setLocale";
 
 function getCookieLocale(request: Request): LocaleCookie | undefined {
@@ -15,10 +42,12 @@ function getCookieLocale(request: Request): LocaleCookie | undefined {
 }
 
 function setLocaleCookie(headers: Headers, locale: LocaleCookie) {
-  headers.append(
-    "Set-Cookie",
-    `${COOKIE_NAME}=${locale}; Path=/; Max-Age=${COOKIE_MAX_AGE}; SameSite=Lax`
-  );
+  // Deliberately no Max-Age/Expires: a session cookie, cleared when the
+  // browser fully closes. A sticky preference should last the browsing
+  // session (switching tabs, reloading, following links), but a genuinely
+  // new session re-checks IP geolocation rather than remembering a stale
+  // decision for up to a year.
+  headers.append("Set-Cookie", `${COOKIE_NAME}=${locale}; Path=/; SameSite=Lax`);
 }
 
 function redirectTo(url: URL, locale: LocaleCookie): Response {
