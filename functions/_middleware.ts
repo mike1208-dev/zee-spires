@@ -1,50 +1,30 @@
-/**
- * Cloudflare Pages middleware — runs on every request before static assets
- * are served.
- *
- * Defaults visitors to the Japanese site (/jp/...) when Cloudflare's edge
- * geolocation (`request.cf.country`) resolves to Japan, and to English
- * otherwise. Uses a `pref_locale` cookie so this only happens once per
- * visitor: the FIRST request with no cookie yet makes the geo-based
- * decision and sets the cookie; every request after that is left alone.
- *
- * Crucially, the cookie is only ever changed by an *explicit* click on the
- * header's EN/日本語 switcher (marked with the `setLocale` query param) —
- * never as a side effect of whichever URL happens to be loaded. An earlier
- * version re-synced the cookie to match "whatever locale this response
- * happens to serve," which silently overwrote a visitor's real preference
- * the moment they landed on the "other" locale's URL for any unrelated
- * reason (a bookmark to the bare domain, a shared link, a second tab) —
- * exactly backwards from what a "sticky preference" should do.
- *
- * Also serves the Japanese 404 page (with an actual 404 status) for
- * unmatched /jp/* paths. This used to be a public/_redirects rule
- * (`/jp/* /jp/404/ 404`), but Cloudflare Pages' _redirects only accepts
- * 200/301/302/303/307/308 as rewrite status codes — 404 is invalid and
- * wrangler flags it at build time (`Found 1 invalid redirect rule`), so
- * that rule was silently never doing anything. Rewriting via the ASSETS
- * binding here actually works, since a Function can return any status.
- */
-
 interface Env {
   ASSETS: Fetcher;
 }
+
+type LocaleCookie = "en" | "jp";
 
 const COOKIE_NAME = "pref_locale";
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 365; // 1 year
 const SWITCH_PARAM = "setLocale";
 
-function getCookieLocale(request: Request): "en" | "ja" | undefined {
+function getCookieLocale(request: Request): LocaleCookie | undefined {
   const cookie = request.headers.get("Cookie") ?? "";
-  const match = cookie.match(/(?:^|;\s*)pref_locale=(en|ja)/);
-  return match?.[1] as "en" | "ja" | undefined;
+  const match = cookie.match(/(?:^|;\s*)pref_locale=(en|jp)/);
+  return match?.[1] as LocaleCookie | undefined;
 }
 
-function setLocaleCookie(headers: Headers, locale: "en" | "ja") {
+function setLocaleCookie(headers: Headers, locale: LocaleCookie) {
   headers.append(
     "Set-Cookie",
     `${COOKIE_NAME}=${locale}; Path=/; Max-Age=${COOKIE_MAX_AGE}; SameSite=Lax`
   );
+}
+
+function redirectTo(url: URL, locale: LocaleCookie): Response {
+  const response = new Response(null, { status: 302, headers: { Location: url.toString() } });
+  setLocaleCookie(response.headers, locale);
+  return response;
 }
 
 export const onRequest: PagesFunction<Env> = async (context) => {
@@ -60,36 +40,37 @@ export const onRequest: PagesFunction<Env> = async (context) => {
   }
 
   const isJpPath = path === "/jp" || path.startsWith("/jp/");
-  const currentLocale: "en" | "ja" = isJpPath ? "ja" : "en";
+  const currentLocale: LocaleCookie = isJpPath ? "jp" : "en";
 
   // Explicit switcher click: the link already points at the target
-  // locale's page, so just record that choice and strip the marker.
+  // locale's page, so just record that choice and strip the marker. This
+  // always wins — it must not be immediately bounced by the enforcement
+  // below.
   if (url.searchParams.has(SWITCH_PARAM)) {
     url.searchParams.delete(SWITCH_PARAM);
-    const response = new Response(null, {
-      status: 302,
-      headers: { Location: url.toString() },
-    });
-    setLocaleCookie(response.headers, currentLocale);
-    return response;
+    return redirectTo(url, currentLocale);
   }
 
   const cookieLocale = getCookieLocale(request);
 
-  // First-ever visit (no stored preference): send Japan-geolocated visitors
-  // straight to the equivalent /jp/ page. Every route has a full /jp/
-  // counterpart, so a plain prefix join is exact.
-  if (!cookieLocale && !isJpPath) {
+  if (cookieLocale) {
+    // Returning visitor with a stored preference: enforce it. Landing on
+    // the "other" locale's URL for any reason (a bookmark, a shared link,
+    // a fresh tab) redirects to the equivalent page in their locale.
+    if (cookieLocale !== currentLocale) {
+      const dest = new URL(request.url);
+      dest.pathname = cookieLocale === "jp" ? `/jp${path}` : path.replace(/^\/jp/, "") || "/";
+      return redirectTo(dest, cookieLocale);
+    }
+  } else {
+    // First-ever visit (no stored preference yet): decide from Cloudflare's
+    // edge geolocation. Every route has a full /jp/ counterpart, so a plain
+    // prefix join is exact.
     const country = (request as unknown as { cf?: { country?: string } }).cf?.country;
-    if (country === "JP") {
+    if (country === "JP" && !isJpPath) {
       const dest = new URL(request.url);
       dest.pathname = `/jp${path}`;
-      const response = new Response(null, {
-        status: 302,
-        headers: { Location: dest.toString() },
-      });
-      setLocaleCookie(response.headers, "ja");
-      return response;
+      return redirectTo(dest, "jp");
     }
   }
 
@@ -106,9 +87,9 @@ export const onRequest: PagesFunction<Env> = async (context) => {
     response = new Response(jp404.body, { status: 404, headers: jp404.headers });
   }
 
-  // Record the first-visit determination so we never geo-check this visitor
-  // again — but only if no preference is stored yet. An existing cookie is
-  // never touched here; only an explicit switcher click (above) changes it.
+  // Record the first-visit determination so we never geo-check this
+  // visitor again. A cookie that already matches the served locale is
+  // left untouched (no need to keep rewriting it every request).
   if (!cookieLocale) {
     const updated = new Response(response.body, response);
     setLocaleCookie(updated.headers, currentLocale);
