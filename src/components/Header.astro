@@ -19,6 +19,15 @@ const t = useTranslations(lang);
 // (falls through unchanged for routes with no translation yet).
 const href = (h: string) => localizeHref(h, lang);
 const homeHref = href("/");
+
+// The bare English root ("/") is the one path functions/_middleware.ts
+// geo-redirects on. Without this marker, clicking EN from the Japanese
+// homepage would just bounce straight back to /jp/ for a Japan-geolocated
+// visitor — see the middleware's doc comment for the full explanation.
+const switchHref = (l: (typeof locales)[number]) => {
+  const target = getAlternateUrl(path, l);
+  return target === "/" ? `${target}?fromSwitch=1` : target;
+};
 const isActive = (h: string) => {
   const target = href(h);
   return target === homeHref ? path === target : path.startsWith(target);
@@ -112,7 +121,7 @@ const isActive = (h: string) => {
                 </span>
               ) : (
                 <a
-                  href={getAlternateUrl(path, l)}
+                  href={switchHref(l)}
                   class="rounded-full px-3 py-1 text-sm font-medium text-fg-muted transition-colors hover:text-fg"
                 >
                   {localeNames[l]}
@@ -204,7 +213,7 @@ const isActive = (h: string) => {
                 </span>
               ) : (
                 <a
-                  href={getAlternateUrl(path, l)}
+                  href={switchHref(l)}
                   class="rounded-full px-4 py-1.5 text-base font-medium text-fg-muted transition-colors hover:text-fg"
                 >
                   {localeNames[l]}
